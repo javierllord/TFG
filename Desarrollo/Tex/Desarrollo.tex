@@ -1,0 +1,793 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%!
+%
+% -- Resultados.tex --
+%    Resultados y conclusiones
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%!
+%!TEX root = ../../Principal/TFG.tex
+\chapter{Desarrollo del sistema propuesto}
+\label{chap:desarrollo}
+\pagestyle{fancy}
+\thispagestyle{empty}
+%
+\graphicspath{{../Desarrollo/Imagenes/}}
+\DeclareGraphicsExtensions{.pdf,.jpg,.png}
+
+%
+% Empieza a escribir aquí
+\section{Contexto y planteamiento del problema }
+
+Como ya se ha comentado, este trabajo implementa y evalúa un sistema de reconocimiento biométrico a través del ECG basado en redes neuronales convolucionales (CNN), con el que se puede realizar tanto la modalidad de identificación de usuarios como la de autenticación. Para ello, el desarrollo se ha basado en los algoritmos propuestos en el artículo científico \textit{Deep-ECG: Convolutional Neural Networks for ECG biometric recognition} \cite{deepecg}. 
+
+Para ambas modalidades, el novedoso enfoque presentado en \cite{deepecg} que se ha utilizado en este estudio consiste en extraer un conjunto de $m$ complejos QRS de registros de ECG de corta duración y concatenarlos, obteniendo una nueva señal \textbf{V}. En la identificación \textit{closed set}, una CNN procesa \textbf{V} e indica quién es el usuario registrado más cercano. En la verificación de la identidad, la CNN procesa \textbf{V} para obtener un patrón biométrico \textbf{T} y, mediante la técnica de comparación de patrones (o \textit{template matching}), da una respuesta a la autenticación en base a la medida de la distancia euclídea.  
+%CHECKEAR TEMPLATE!!!!!!
+%REPETIR IMAGEN
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{/pipeline_1}
+	\caption{Flujo de Trabajo.}
+	\label{pipeline}
+\end{figure}
+
+El flujo de trabajo está dividido en las siguientes etapas (Figura \ref{pipeline}):
+\begin{itemize}
+	\item Preprocesamiento de la señal.
+	\item Extracción de características con la CNN.
+	\item Reconocimiento biométrico.
+	\begin{enumerate}
+		\item Identificación basada en \textit{Soft-max}.
+		\item Autenticación basada en comparación de patrones. 
+	\end{enumerate}
+\end{itemize}
+
+%AÑADIR ALGO SOBRE DEPORTE Y NO DEPORTE Y ALGO SOBRE OPEN SET IDENTIFICATION?????
+
+Además, con este estudio se ha querido analizar la estabilidad del ECG como característica biométrica, utilizando registros de la señal obtenidos en dos sesiones diferentes y utilizando experimentos diferentes según la toma de datos.
+
+Todo el desarrollo de este proyecto ha sido implementado con el lenguaje de programación Python \cite{python}, que es el lenguaje más utilizado hoy en día para construir y entrenar redes neuronales y, en particular, redes neuronales convolucionales. La sintaxis de \break Python se caracteriza por su sencillez, que hace que sea fácil de usar y rápido de aprender. Además, este lenguaje tiene licencia de código abierto y cuenta con una amplia cantidad de bibliotecas disponibles para el \textit{Deep Learning}, incluyendo NumPy \cite{Oliphant2006}, scikit-learn \cite{skit}, así como con todas las plataformas más populares y poderosas de este campo. 
+Una de ellas es Keras \cite{keras}, que se ha utilizado en este proyecto para la implementación de todas las CNNs. Keras es una biblioteca de \textit{Deep Learning} de alto nivel, que se ejecuta típicamente sobre TensorFlow \cite{tensorflow}. Esta biblioteca permite una rápida experimentación y se caracteriza por su modularidad y extensibilidad, que permiten  combinar y añadir capas neuronales, funciones de activación, hiperparámetros y otros elementos con facilidad.
+
+
+%los principales marcos de aprendizaje profundo apoyan a Python. De estos, las plataformas más populares y poderosas son TensorFlow, Keras (que se utiliza típicamente como un envoltorio de front-end para TensorFlow), y PyTorch.
+% 
+%Keras es un marco de aprendizaje profundo de alto nivel que se ejecuta sobre TensorFlow, Microsoft Cognitive Toolkit o Theano (pero en la práctica, más comúnmente utilizado con TensorFlow). Keras proporciona convenientes abstracciones de programación que le permiten trabajar con construcciones de aprendizaje profundo como modelos, capas e hiperparámetros, no con tensores y matrices.
+%
+%
+%Keras [11] es una librería enfocada al diseño de redes neuronales, que se puede ejecutar sobre numerosas plataformas, entre ellas TensorFlow.  
+%
+%Hay muchos marcos y bibliotecas de Python disponibles para la máquina y el aprendizaje profundo, incluyendo NumPy, scikit-learn, así como los "tres grandes" marcos de aprendizaje profundo que discutimos en la siguiente sección
+
+
+ 
+
+
+
+
+\section{Base de datos}
+
+%Hablar aquí de las bases de datos existentes? solo de la mía? 
+ 
+Como se ha podido ver en el capítulo \ref{arte}, no existe un consenso sobre qué requisitos deben cumplir las bases de datos utilizadas para el diseño de sistemas biométricos basados en ECG, haciendo muy difícil una posible comparativa entre métodos. Las técnicas de adquisición de datos utilizadas actualmente varían en parámetros tan importantes como la configuración de los electrodos, el tiempo de adquisición, el número de sujetos o el número de sesiones, entre muchos otros. Además, existen diferencias entre si la autenticación es continua o si la verificación de la identidad del usuario es requerida para un instante dado.
+
+
+
+%Independientemente de esto, está claro que en la mayoría de las bases de datos, se tiene sólo una muestra continua de cada usuario, por lo que no se pueden extrapolar datos respecto a la repetitividad de los datos en días distintos. Por lo tanto, la viabilidad de utilizar estas bases de datos en el trabajo expuesto es prácticamente nula, así como la de validar los resultados ofrecidos por aquellos autores que hayan usado estas bases de datos para su investigación.
+
+Afortunadamente, para la realización de este trabajo se ha podido contar con una base de datos ya existente y diseñada especialmente para aplicaciones de identificación y autenticación. 
+
+La captura de las muestras se llevó a cabo utilizando BioPac MP100, un equipo comercial de ECG, y los usuarios participantes fueron 105 personas sanas, con edades comprendidas entre los 19 y los 60 años, siendo 54 mujeres y 51 hombres.
+
+Esta base de datos, a su vez puede ser dividida en dos, según el tipo de experimento realizado para la toma de los datos. Así, la captura de los mismos se rige de la siguiente manera:
+%datos, datos datos, datos
+\begin{itemize}
+	\item Para obtener variabilidad intra-clase, se llevaron a cabo 2 sesiones de captura por cada usuario, separadas entre sí un mínimo de una semana.
+	\item Para la \textbf{primera base de datos, constituida por los 50 primeros sujetos}, ambas sesiones son iguales:
+	\begin{itemize}
+		\item En la primera toma, el usuario se encuentra sentado, en actitud relajada y con los ojos abiertos.
+		\item En la segunda toma, el usuario se encuentra también sentado y en actitud relajada, pero esta vez con los ojos cerrados. 
+	\end{itemize}
+
+	\item Para la \textbf{segunda base de datos, constituida por los siguientes 55 sujetos}, las sesiones varían:
+	
+	\begin{itemize}
+		\item Para la primera sesión:
+			\begin{itemize}
+				\item La primera toma es igual que para la primera base de datos.
+				\item En la segunda toma, el usuario se encuentra de pie, con los ojos abiertos y en actitud relajada.
+			\end{itemize}
+		\item Para la segunda sesión:
+			\begin{itemize}
+				\item La primera toma se mantiene.
+				\item En la segunda toma, el usuario está sentado, y se realiza después de haberse ejercitado en un \textit{stepper} durante 5 minutos hasta llegar a los 130 latidos por minuto.
+			\end{itemize}
+	\end{itemize}
+	\item Cada toma de datos se repitió 5 veces y cada una tiene una duración de 60 segundos. Cada usuario tiene 20 tomas.
+	\item La señal ECG fue capturada en las muñecas de los usuarios.
+	\item La frecuencia de muestreo se fijó a 1 KHz.
+	\item Además, como la base de datos completa la forman 105 usuarios, se consiguió una representatividad aceptable de la distribución inter-clase.
+\end{itemize}
+
+La Figura \ref{qrss} muestra visualmente las posibles diferencias que existen, para un mismo usuario, entre las dos sesiones de captura, entre estar sentado y de pie, y entre estar en reposo o después de hacer ejercicio. 
+
+\begin{figure}[h!]
+	\centering
+	\subfigure{
+		%\label{fig:heliceuno}
+		\includegraphics[width=0.3\textwidth]{/qrs_sesiones}}
+	\subfigure{
+		%\label{fig:ferula}
+		\includegraphics[width=0.3\textwidth]{/qrs_sentadodepie}}
+	\subfigure{
+		%\label{fig:heliceuno}
+		\includegraphics[width=0.3\textwidth]{/qrs_deporte}}
+	\caption{Examen visual de la variabilidad entre los casos capturados.}
+	\label{qrss}
+\end{figure}
+
+
+Como se puede ver, no existe una gran variabilidad entre la primera sesión y la segunda sesión. Sí que se aprecia una pequeña variación (especialmente en la onda T) entre estar sentado y estar de pie. La variación es algo más significativa entre las muestras obtenidas tras haber hecho ejercicio. 
+
+
+
+
+\section{Prepocesado de la señal de ECG}
+
+En esta sección se describe la etapa de preprocesado de las señales del ECG, que tiene como objetivo mejorar su calidad y extraer de ellas los complejos QRS más discriminantes. Para ello, nos hemos basado en los algoritmos presentados en el artículo de referencia \cite{deepecg}.
+
+\subsection{Filtrado de la señal}
+Antes de llevar a cabo el filtrado de las señales, para obtener las muestras biométricas que se van a emplear en el entrenamiento y en la evaluación del sistema, la frecuencia de muestreo de cada toma se ha reducido de 1000 Hz a 200 Hz. Además, cada señal de 60 segundos se ha dividido en intervalos de 10 segundos, periodo que se utiliza típicamente para el análisis médico \cite{deepecg}. Por tanto, para cada usuario ahora hay 120 tomas registradas. 
+
+Realizar un filtrado adecuado para las señales del ECG requiere tener en cuenta las componentes de ruido que puedan estar presentes, y las componentes de frecuencia de las diferentes ondas que describe el corazón (descritas en la sección \ref{fisio}), especialmente del complejo QRS. 
+
+Típicamente, el electrocardiograma tiene dos fuentes de ruido principales \cite{framework,removing,approaches}: 
+%EN REALIDAD SON TRES!
+\begin{itemize}
+	\item Variaciones de baja frecuencia de la línea base (o en inglés \textit{Baseline Wander}) causadas por el uso de electrodos inapropiados, movimientos del sujeto y la propia respiración. Esto genera un "desplazamiento" de la línea base arriba y abajo que se encuentran en el rango de 0,5 Hz, aunque un mayor movimiento del sujeto al realizar ejercicio o pruebas de estrés pueden aumentar su frecuencia. Para eliminar esta fuente de ruido, bastaría con aplicar un filtro de respuesta finita al impulso (\textit{FIR}) de paso alto con una frecuencia de corte de 0,5 Hz. 
+	\item Interferencias de red, presentes en cualquier señal bio-eléctrica registrada desde la superficie del cuerpo de una persona. Este ruido se caracteriza por ser una interferencia sinusoidal de 50-60 Hz, posiblemente acompañada de una serie de armónicos. Para eliminarlo, puede utilizarse un filtro notch de respuesta infinita al impulso (\textit{IIR}). 
+\end{itemize}
+
+Teniendo esto en cuenta, para reducir el ruido global de la señal del ECG, también podría utilizarse un filtro paso-banda, como puede ser el filtro paso banda de \textit{Butterworth}, que se caracteriza por una respuesta muy uniforme a las frecuencias dentro de la banda de paso \cite{samarin,reillo,deep}. 
+
+%(ESTO AQUÍ TIENE SENTIDO???)
+Respecto a qué componentes de frecuencia son más útiles para analizar las diferentes ondas presentes en el ECG, no existe un consenso absoluto, y diferentes investigadores muestran distintas respuestas, considerándose incluso que el ancho de banda útil para analizar el complejo QRS varía en función de la persona e incluso en función del tiempo para una misma persona \cite{850hz, hblocks, ult}. 
+
+Con el fin de mejorar la calidad de las señales de nuestra base de datos, se han probado los diferentes filtros citados, experimentando con diferentes frecuencias de corte y con distintos valores de orden, y finalmente se ha utilizado un filtro \textit{Butterworth} paso banda entre 1 y 35 Hz de orden 5. El resultado de aplicar este filtro sobre la señal sin procesar se puede ver en la Figura \ref{filtro}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/filtro}
+	\caption{Resultado de aplicar un filtro paso-banda Butterworth.}
+	\label{filtro}
+\end{figure}
+
+Además, la Figura \ref{espectro}, muestra el espectro en frecuencia de la señal de ECG antes y después de aplicar el filtro, donde se puede apreciar claramente como se ha eliminado el ruido de baja frecuencia correspondiente a la \textit{Baseline Wander}. El ruido debido a las interferencias de red, sin embargo, solo es apreciable en la escala logarítmica. 
+
+
+
+
+%REPASAR ESTE PÁRRAFO
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Espectro en frecuencia de la señal sin filtrar.]{
+		\label{fig:esp_sin}
+		\includegraphics[width=0.8\textwidth]{/espectro_sin}}
+	\subfigure[Espectro en frecuencia de la señal filtrada.]{
+		\label{fig:esp_con}
+		\includegraphics[width=0.8\textwidth]{/espectro_filtro}}
+	
+	\caption{Espectro en frecuencia de la señal de ECG antes y después de aplicar un filtro paso-banda Butterworth.}
+	\label{espectro}
+\end{figure}
+
+También se realizó un filtrado mucho más agresivo sobre la señal, con un filtro \textit{Butterworth} paso banda entre 5 y 20 Hz, como se utilizó en el estudio realizado por Carreiras \textit{et al.} \cite{Carreiras2016}. Si bien este filtrado permitía mejorar la precisión en la detección de picos R, los resultados obtenidos para la identificación de personas fueron notablemente peores (84\% frente a 97\%). Esto demuestra que la selección de un filtrado adecuado influye de forma significativa en el funcionamiento de la red, y que si se eliminan demasiadas componentes de frecuencia del complejo QRS, la red no es capaz de distinguir entre los diferentes sujetos con tanta precisión.
+
+\subsection{Segmentación de la señal y obtención del vector V}
+%Detección de picos, obtención del vector h y obtención del vector V, descarto los problemáticos
+El siguiente paso, una vez mejorada la calidad de la señal de ECG, es la extracción de los complejos QRS. 
+%Aquí o al principio?
+El uso de este complejo para  propósitos biométricos puede ser muy beneficioso, al ser la parte del ECG menos sensible a las variaciones debidas al esfuerzo físico o al estado emocional de la persona. 
+Así, el QRS puede utilizarse para extraer los rasgos que componen los patrones biométricos de cada individuo.
+
+Como se ha explicado anteriormente (capítulo \ref{arte}), los sistemas biométricos basados en el ECG se pueden clasificar en función de si su procesamiento se basa en el uso de características locales (o sea, fiduciales) o características globales (no-fiduciales). 
+%hablar de esto en el estado del arte!!! si no, explicarlo aquí
+En este caso, el enfoque es parcialmente-fiducial, es decir, mediante la localización de los picos R se extraen las características de las ondas de los latidos del corazón, concretamente del complejo QRS. 
+
+Por tanto, el primer paso es la detección del pico R de cada latido. La búsqueda de este punto es generalmente más sencilla que la búsqueda de otros puntos de referencia, porque es el pico más alto y más agudo en un latido.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{/pan_2}
+	\caption{Detección de QRS con el algoritmo de Pan-Tompkins.}
+	\label{pan}
+\end{figure}
+
+En un inicio, se utilizó una implementación  del algoritmo de Pan-Tompkins para la detección de los complejos QRS \cite{pan}. Este algoritmo se basa en la derivación, la elevación al cuadrado y la integración de la señal, para la detección de picos basada en umbrales adaptativos, como se puede ver en la Figura \ref{pan}.
+
+Sin embargo, para detectar los picos R con mayor precisión, se ha utilizado una herramienta de detección de picos de \textit{SciPy.org} \cite{picos}, definiendo un umbral sobre las señales normalizadas y fijando una distancia mínima entre picos, que se corresponde con el intervalo R-R, y que varía en función de si la persona ha hecho ejercicio o no. Este valor se ha establecido de manera fija pero, habiendo obtenido previamente el número de complejos QRS mediante el algoritmo de Pan-Tompkins, se podría hacer dinámico en función del número de latidos, mejorando así la detección. 
+
+%Podria haber usado el pan-tomkins para calcular el número de latidos, y así hacer una distancia dinámica en función del número de latidos segun ha hecho deporte o no xq ritmo cardíaco varía
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\textwidth]{/picos}
+	\caption{Detección de picos R.}
+	\label{picos}
+\end{figure}	
+
+Esta tarea ha sido especialmente complicada, pues en muchas de las señales la presencia de ruido aún después del filtrado o la propia morfología de la señal de ciertas personas, hace que el pico R no siempre sea fácil de distinguir, confundiéndose en muchas ocasiones con la onda T. Una posible mejora es la aplicación de un umbral dinámico basado en la media móvil de la señal. Por otro lado, como medida preventiva, aquellas señales en las que no se ha detectado un mínimo de 3 picos R han sido descartadas, considerando que la detección no se ha realizado correctamente. 
+
+%FIGURA de umbral dinámico???
+
+Una vez localizados los picos R, se ha llevado a cabo la segmentación de la señal en los diferentes complejos QRS. Para ello: 
+\begin{itemize}
+	\item Se aplica una ventana de 0,125 segundos a cada punto detectado, obteniendo así un vector H de \textit{n} complejos QRS, y el resto de la señal se desecha. Este valor es constante, pues como se ha podido ver en la Figura \ref{qrss} %la del QRS superpuesto con y sin deporte
+	  la duración del QRS no varía para una misma persona aún habiendo realizado ejercicio, aunque el ritmo cardíaco sea mayor. 
+	\item De estos \textit{n} QRS, se extraen los \textit{m} QRS más discriminatorios, obteniendo así el \textbf{vector V}, que es el vector que va a caracterizar a cada sujeto junto con su correspondiente etiqueta: 
+	\begin{itemize}
+		\item Para valorar la calidad de los complejos QRS y obtener dichos \textit{m} QRS más discriminatorios que forman el vector \textbf{V}, se extrae del vector H el QRS promedio, $\overline{QRS}$, y se calculan los coeficientes de correlación de Pearson. Es decir, se calcula la correlación entre cada complejo QRS del vector H y el $\overline{QRS}$, obteniendo el vector C.
+		\item Los \textit{m} complejos QRS que tengan mayor valor de C se concatenan, dando como resultado el vector \textbf{V}.
+		\item Si el número \textit{i} de QRS presentes en el vector H es menor que \textit{m}, se completa el vector \textbf{V} replicando el complejo que tenga mayor valor de C.  
+		\item Si el valor del coeficiente de correlación de Pearson es menor de 0,5, se considera que el complejo QRS no está correlado con el $\overline{QRS}$, y por tanto se descarta considerando que es ruidoso, o un complejo mal detectado. 
+		
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{/preproceso_3}
+	\caption{Proceso de la segmentación de la señal hasta la obtención del vector V.}
+	\label{preproceso}
+\end{figure}
+
+
+
+Para cada muestra que, recordamos, tiene una duración de 10 segundos y un número de QRS variable, sobre todo, según la persona y en función de si ha realizado ejercicio o no, se extrae el vector \textbf{ V} de características fijando $\textit{m} = 8 QRS$, es decir, un vector de 1 sg compuesto por 8 QRS concatenados y una dimensión de $200 \times 1$, teniendo en cuenta la frecuencia de muestreo (200 Hz). Este valor para \textit{m} se ha fijado teniendo en cuenta el artículo de referencia \cite{deepecg}, que basa su decisión en estudios previos que demuestran que 8 latidos mantienen un buen equilibrio entre rendimiento y usabilidad \cite{Odinaka2012}. Además, el estudio de Salloum \textit{et al.} \cite{autentiguia}, también ha demostrado que un mayor número de latidos concatenados da lugar a un mejor rendimiento de la red neuronal. % (9 latidos concatenados frente a 3 en este estudio).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{/vectv}
+	\caption{Ejemplo de un vector V, compuesto por 8 QRS y tiene 1 segundo de duración. El vector V es la entrada de la CNN.}
+	\label{v}
+\end{figure}
+
+A partir de este momento, cada vez que se haga referencia al uso de muestras de un usuario, éstas equivalen al \textbf{V}. Este vector está compuesto por 200 elementos \break(1 segundo).
+ 
+\section{Extracción de características}
+
+%z-score normalization si me faltan cosas aquí
+
+Una vez realizado el preprocesamiento de la señal y obtenido el vector V, que se va a emplear para caracterizar a los sujetos, el siguiente paso es la extracción de características, es decir, la búsqueda de patrones. Como ya se ha comentado anteriormente, para realizar tanto la función de identificación como de autenticación, la extracción de características se basa en una red neuronal convolucional (CNN). 
+
+Aunque el uso más generalizado de las CNNs es la clasificación de imágenes 2D, su aplicación para señales unidimensionales es también muy efectiva cuando se espera extraer rasgos de pequeñas ventanas del conjunto de datos, y cuando la ubicación de estas características dentro de la ventana no es de gran relevancia %\cite{la pag web que he utilizado}.
+Así, mientras que una capa densamente conectada (\textit{fully connected}) aprende patrones globales en su espacio global de entrada, las capas convolucionales lo hacen de manera local \cite{Torres2018}. 
+
+%Escribir algo más sobre redes neuronales¿?
+
+Como se va a detallar a lo largo de esta sección, para la identificación de usuarios y el entrenamiento de la red, el reconocimiento de los patrones obtenidos por la CNN se lleva a cabo mediante una capa de salida con la función de activación \textit{Soft-max}, que devuelve la identidad del sujeto, mientras que para la autenticación, se realiza una comparación de estos patrones obtenidos por la CNN, determinando la verificación de la identidad en función de un umbral. 
+
+Los pasos que se han seguido para ello son: el diseño de la arquitectura de la CNN, la selección de hiperparámetros y el entrenamiento de la red y, en autenticación, la comparación de patrones.
+
+%\nameref{arq}, la \nameref{hiper} y, en autenticación, la \nameref{matchin}. Todos ellos se han aplicado tanto para la primera base de datos como para la segunda. 
+%Algo más¿?
+
+\subsection{Arquitectura de la CNN} \label{arq}
+
+La Figura \ref{fig:arq} muestra la arquitectura de la red utilizada. Como se puede comprobar, las primeras capas son convolucionales, intercaladas con capas de reagrupamiento \textit{pooling} y de normalización, seguidas por una capa de  \textit{dropout} y finalmente, para el entrenamiento y la identificación, una capa densamente conectada (\textit{fully connected}) con activación \textit{Soft-max} (que se elimina en la configuración de red para autenticación de usuarios).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{/arquitectura}
+	\caption{Esquema de la arquitectura de la CNN. La capa densamente conectada solo se utiliza para el entrenamiento de la red y para identificación.}
+	\label{fig:arq}
+\end{figure}
+
+%un peqeño resumen de lo que hace cada capa ¿?
+A continuación, vamos a analizar brevemente las diferentes capas y su comportamiento:
+\begin{itemize} 
+	\item Primera capa convolucional 1D: esta capa es la que recibe los datos de entrada, es decir, el vector V obtenido tras el preprocesado de las señales. Este vector tiene una dimensión de $200 \times 1$, y por tanto, la capa estará compuesta por 200 neuronas. Esta capa define 16 filtros de dimensión $7 \times 1$, conocida como \textit{kernel size}, es decir, la red aplica 16 filtros diferentes sobre el vector de entrada. Como resultado de la convolución con cada filtro, la salida de esta capa va a ser una matriz de características de $194 \times 16$. Cada columna de esta matriz contiene los pesos (\textit{weights}) de un único filtro, es decir, 194 pesos. Estos pesos se van optimizando conforme se va entrenando la red. 
+	
+	\item\textit{Max-pooling}: esta capa se utiliza después de una capa convolucional con el fin de simplificar la información recogida por ésta y crear una versión condensada de la información que contiene. De esta manera, se reduce la complejidad de la salida de la capa anterior y ayuda a prevenir el sobreajuste \textit{overfitting} de los datos. En concreto, la capa \textit{Max-pooling} se queda con el valor máximo de los que había en la ventana de entrada. En este caso, tiene un tamaño de 3, por lo cual el tamaño de la matriz de salida de esta capa será solo una tercera parte de la de entrada. 
+	
+	\item\textit{Batch Normalization}: esta capa normaliza las funciones de activación de la capa anterior para cada \textit{batch}, es decir, aplica una transformación para mantener su media próxima a 0 y su desviación estándar próxima a 1. Esta capa ayuda a prevenir la realentización del entrenamiento, reduciendo el cambio de covariable interno (del inglés \textit{internal covariate shift}). El tamaño de la salida de esta capa es el mismo que el de la entrada. 
+	
+	\item\textit{Global Average Pooling}: esta capa es otro tipo de reagrupamiento, donde cada grupo de puntos de entrada se transforma en el valor promedio de los mismos, en vez del valor máximo. Por tanto, por cada filtro, solo permanece en la red un peso, reduciéndose así a una sola dimensión la salida. 
+	
+	\item\textit{Dropout}: esta capa asignará aleatoriamente un 0 a los pesos de las neuronas de la red. En este caso, el $50\%$ de las neuronas recibirán un peso igual a cero. Gracias a esta capa, la red es menos sensible a pequeñas variaciones en los datos, y por tanto, aumentará su rendimiento cuando se utilice para datos desconocidos, es decir, mejorará su capacidad de generalizar. La dimensión de la salida de esta capa es la misma que la de entrada. 
+\end{itemize}
+
+Para todas las capas convolucionales se usa la función de activación ReLU (\textit{Rectified Linear Units}) para introducir la no linealidad a la red. La función de activación ReLU activa un solo nodo si la entrada está por encima de cierto umbral. Si la entrada está por debajo de cero la salida será cero, y cuando está por encima, la salida es una relación lineal con la variable de entrada de la forma $f(x) = x$. Además, en todas las capas \textit{Max-pooling} se especifica una longitud de paso de avance (\textit{stride}) de 2. Este parámetro controla cómo convoluciona el filtro sobre el volumen de entrada, es decir, define el número de pasos en que se mueve la ventana de los filtros, reduciendo todavía más el tamaño de la matriz de salida de las capas. 
+
+\newpage
+Las capas convolucionales y de reagrupamiento se van intercalando, como ya se ha visto en la Figura \ref{fig:arq}, de forma que la información obtenida como resultado de la convolución de los diferentes filtros con la señal de entrada se condensa, hasta que se obtiene un único \textbf{vector de características} de 256 elementos. Este vector representa el patrón de cada usuario. La Figura \ref{fig:summary} muestra la arquitectura de la red con los tamaños de salida de cada capa. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{/model}
+	\caption{Resumen del modelo empleado con los tamaños de las salidas de cada capa.}
+	\label{fig:summary}
+\end{figure}
+
+Los parámetros que no son entrenables provienen de las capas de  \textit{Batch Normalization}, pues sus vectores de media y varianza no se actualizan por propagación hacia atrás (\textit{backpropagation}) \cite{github}. 
+
+En el caso de la arquitectura de la red para el entrenamiento y para realizar identificación, se utiliza una última capa de salida densamente conectada con función de activación \textit{Soft-max}. Esta capa recibe como entrada el vector de características o patrón, de 256 elementos, y lo clasifica, de forma que devuelve como salida un vector de dimensión igual al número de clases posibles en la clasificación. Por tanto, para la primera base de datos que tiene 50 usuarios registrados, el vector tendrá 50 elementos, y para la segunda que tiene 55, 55. En esta capa \textit{Soft-max}, cada neurona depende de las salidas de todas las demás neuronas de la capa, puesto que la suma de la salida de todas ellas debe ser 1. Por tanto, el valor de salida de cada neurona representa la probabilidad que tiene de pertenecer a la clase que representa. 
+
+%N neurons (where N is the number of subjects),
+
+Por otro lado, en autenticación, el vector de características se utiliza para realizar \textit{template matching}, como se explica en la sección \ref{matchin}.
+%Pero como hemos explicado, no se conectan todas las neuronas de entrada con todas las neuronas de este primer nivel de neuronas ocultas, como en el caso de las redes neuronales densamente conectas; solo se hace por pequeñas zonas localizadas del espacio de las neuronas de entrada que almacenan los píxeles de la imagen.
+\subsection{Selección de hiperparámetros y entrenamiento de la red} \label{hiper}
+
+Los hiperparámetros difieren de los parámetros del modelo de una red, en que estos no pueden ser aprendidos explícitamente de los datos durante la fase de entrenamiento. Por tanto, los hiperparámetros se definen antes de entrenar un modelo y rigen el propio proceso de entrenamiento, influyendo de manera muy significativa en el resultado final. El número de hiperparámetros que se puede tener en cuenta a la hora de diseñar una red es muy extenso, y existen muchas posibles combinaciones. Además, también hay muchas formas de llevar a cabo la optimización de dichos hiperparámetros. Esto hace que su proceso de selección y optimización sea muy laborioso. 
+
+Para llevar a cabo esta optimización, los datos de entrenamiento han sido a su vez divididos en dos subconjuntos (\textit{datasets}): el de entrenamiento y el de validación. De esta forma, los datos de validación, que la red no ha analizado durante el entrenamiento, se utilizan para ajustar los hiperparámetros. Así, para ambas bases de datos, las muestras se han dividido desde el principio en tres \textit{datasets}: entrenamiento, validación y prueba. De esta manera, el modelo siempre se entrena sobre los datos de entrenamiento, los hiperparámetros se optimizan usando los datos de validación y el resultado final del modelo se evalúa sobre los de prueba, conocido como método de retención (\textit{holdout method}). La desventaja que presenta este método es que la evaluación de resultados se ve condicionada por los datos elegidos para la validación. Por ello, para la primera base de datos, también se ha probado una validación cruzada de K iteraciones (\textit{k-fold cross-validation}). En ella, los datos de entrenamiento se dividen en $k$ subconjuntos (\textit{folds}), y el proceso de validación cruzada se repite $k$ veces. En cada iteración, uno de los $k$ subconjuntos se usa como set de validación y el  resto $k-1$ subconjuntos son utilizados como set de entrenamiento. Finalmente se realiza la media aritmética de los resultados de cada iteración para obtener un único resultado. Sin embargo, aunque este método es más preciso, es muy lento desde el punto de vista computacional, y no se ha aplicado para la segunda base de datos. 
+
+El método de muestreo que se ha utilizado durante la optimización ha sido el muestreo de cuadrícula (\textit{grid search}), que consiste en una búsqueda exhaustiva sobre determinados conjuntos de hiperparámetros del modelo. La red es entrenada para cada valor de los hiperparámetros, y el resultado de cada modelo es comparado, eligiendo finalmente el que que haya obtenido un resultado mejor. La métrica que se ha utilizado para comparar los modelos es el rendimiento (\textit{accuracy}). 
+
+
+\begin{table}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{/compa}
+	\caption{Comparativa de los resultados del rendimiento de la red durante la fase de prueba para diferentes modelos.}
+	\label{compa}
+\end{table}
+
+Algunos de los hiperparámetros, como el número de capas ocultas de la red, el uso de \textit{strides}, el tamaño y número de filtros y las funciones de activación, entre otros, ya se han comentado en la sección anterior. Estos han sido ajustados basándose en el artículo de referencia \cite{deepecg} y de manera empírica. La Tabla \ref{compa} muestra una comparativa de los resultados de rendimiento sobre los datos de prueba de diferentes modelos que se han evaluado para la primera base de datos. 
+
+
+Otros hiperparámetros que se han tenido en cuenta son el tamaño de \textit{batch} y el número de \textit{epochs}. Para ambas bases de datos, se ha realizado un muestreo en cuadrícula para diferentes valores. Los resultados de rendimiento obtenidos para cada base de datos sobre las muestras de prueba en las diferentes combinaciones se pueden ver en la Figura \ref{batch}.
+
+\begin{figure}[H]
+	\centering
+	\subfigure[Base de datos 1]{
+		\label{fig:bd1}
+		\includegraphics[width=0.6\textwidth]{/acc_epo_1}}
+	\subfigure[Base de datos 2]{
+		\label{fig:bd2}
+		\includegraphics[width=0.6\textwidth]{/acc_epo_2}}
+
+	\caption{Optimización del tamaño de \textit{batch} y el número de \textit{epochs} mediante un muestreo de cuadrícula.}
+	\label{batch}
+\end{figure}
+
+
+Para la fase de entrenamiento la función de pérdida (\textit{loss}) que se ha utilizado es \break \textit{categorical\_crossentropy}, que ajusta los parámetros del modelo (los pesos $wi$ y el sesgo $b$) de tal manera que el resultado de la pérdida tenga el mínimo valor posible.
+Finalmente, el optimizador usado ha sido el \textit{adam} con una tasa de aprendizaje (\textit{learning rate}) de  0.001.
+
+
+La Figura \ref{fig:accloss} muestra la evolución del rendimiento y de la pérdida durante el entrenamiento de uno de los modelos. Como se puede ver, tanto para el set de entrenamiento como para el de validación, el rendimiento se acerca a 1 y la pérdida a 0, obteniéndose por tanto buenos resultados en cuanto al entrenamiento de la red. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{/acc_loss_}
+	\caption{Evolución del rendimiento y de la pérdida de entrenamiento y de validación durante la fase de entrenamiento de la red.}
+	\label{fig:accloss}
+\end{figure}
+
+
+\subsection{Comparación de patrones} \label{matchin}
+
+%Una vez obtenida la representación de la muestra en el nuevo espacio K-dimensional, se
+%utilizan los coeficientes para comparar entre muestras. Para realizar esta comparación se
+%va a utilizar la Distancia Euclídea normalizada:
+%??(??1, ??2) =
+%1
+%??
+%?(??1 ? ??2)?? (??1 ? ??2)
+%Trabajo de Investigación
+%Concurso de Acceso a Catedrático de Universidad en UC3M (DF000755/56)
+%Dr. Raúl Sánchez Reíllo 37
+%Con la distancia obtenida, dependiendo de si el sistema se configura en modo
+%Identificación o en Autenticación, se utilizará o la votación de vecino más próximo (en
+%Identificación), o la comparación con un umbral previamente establecido (en
+%Autenticación).
+%Lo especialmente atractivo de esta aproximación es su bajo coste computacional, que
+%permitirá su ejecución en tiempo real y sin unas demandas de procesamiento excesivas
+
+
+%For the authentication scenario, the equal error
+%rate (EER) was computed in the following manner. Given a
+%summary vector obtained from the evaluation data of a particular
+%subject, this vector is compared to each enrollment model
+%(one model for each subject in the enrollment/evaluation set)
+%using cosine distance as a similarity metric. An authentication
+%decision for each comparison is then made based on a given
+%threshold. Thus, for each summary vector obtained from the
+%evaluation dataset, there is a certain number of each of the following
+%quantities: true acceptance, true rejection, false acceptance,
+%false rejection. Each of these 4 quantities is summed
+%across the set of summary vectors obtained from the evaluation
+%dataset, and the false acceptance rate (FAR) and false
+%rejection rate (FRR) are computed. The threshold is then varied
+%to yield a plot of FAR and a plot of FRR, and the EER is
+%taken to be the intersection of these two curves.
+
+%La comparación de patrones, o \textit{template matching} 
+La autenticación biométrica se ha llevado a cabo mediante la comparación de patrones o \textit{template matching}. Más específicamente, un \textbf{patrón o \textit{template}} es una instancia registrada de las características biométricas de una persona. El patrón se registra durante la fase de reclutamiento del usuario en el sistema y se almacena en una base de datos. Posteriormente, cuando el usuario realiza una consulta (\textit{query}), se registra una nueva muestra  y se compara con su patrón específico, en oposición a la identificación, en la que se compara con todos los patrones registrados, tal y como se ha explicado en la sección \ref{idvsau}.
+
+Para implementar la configuración de red utilizada en autenticación, se ha retirado la última capa (\textit{Soft-max}) de un modelo entrenado con los usuarios de la primera base de datos, y esta nueva arquitectura de red se ha utilizado para verificar la identidad de los usuarios de la segunda base de datos, y viceversa. De esta manera, la red siempre ha sido entrenada con usuarios diferentes a los usuarios que se quiere autenticar. 
+
+Durante la fase de reclutamiento, la red se utiliza para obtener el patrón específico de cada usuario. La nueva salida (\textit{output}) de la red es el vector de carácterísticas de 256 elementos para cada muestra, como ya comentábamos en \ref{arq}. De todos los vectores de características obtenidos para un mismo usuario, se extrae un único vector promedio, de la misma dimensión, y éste se almacena como \textbf{patrón} del usuario. 
+ 
+%PONER AQUI LAS TSNE Y PCAS O EN RESULTADOS. 
+
+Durante la fase de consulta, se obtiene el vector de características para una nueva muestra del usuario que realiza dicha consulta, y este vector de características se compara con el patrón almacenado de este usuario. Para realizar esta comparación, en el espacio de dimensión $k = 256$, se ha utilizado la distancia euclídea: 
+\begin{center}
+	$D(P,Q) = \sqrt{\sum\limits_{i=1}^{n}(p_i - q_i)^{2}}$
+\end{center}
+
+Donde $P$ es el vector \textbf{patrón} y $Q$ es el vector de la  \textbf{consulta (\textit{query})}. Si la distancia obtenida es menor que un umbral establecido, la consulta se considera válida, el usuario es quien dice ser, mientras que si supera el umbral la consulta es rechazada, pues el usuario no es quien dice ser sino un impostor. 
+
+%!TEX root = ../../Principal/TFG.tex
+\chapter{Evaluación del sistema: resultados experimentales}
+\label{chap:resultados}
+\pagestyle{fancy}
+\thispagestyle{empty}
+%
+\graphicspath{{../Desarrollo/Imagenes/}}
+\DeclareGraphicsExtensions{.pdf,.jpg,.png}
+%\
+En este capítulo se va a describir la evaluación de la red neuronal convolucional propuesta en el capítulo anterior con las bases de datos, también ya descritas. Los resultados están divididos en dos secciones: \nameref{id} y \nameref{aut}. Además, los resultados de identificación están a su vez divididos según las diferentes bases de datos. 
+
+
+\section{Identificación} \label{id}
+
+La arquitectura de identificación se ha probado tanto para la primera base de datos como para la segunda y, además, se ha realizado una prueba sobre la base de datos completa (los 105 sujetos). En todos los casos, se ha realizado una identificación sobre un conjunto cerrado (\textit{closed set}), es decir, todos los sujetos que se pretende identificar han tenido que ser previamente registrados (todas las muestras de test pertenecen a usuarios cuyas muestras se han utilizado para el entrenamiento de la red).
+
+Las muestras se han dividido siempre en un 80\% para entrenamiento y 20\% para test. A su vez, el set de entrenamiento se ha dividido en un 90\% entrenamiento y 10\% validación. 
+
+Al evaluar el rendimiento del clasificador con ambas bases de datos, se ha querido comprobar que, efectivamente, ni el estado físico de la persona ni el día en que han sido tomadas las muestras afectan al proceso de su identificación. 
+
+
+\subsection{Primera base de datos}
+
+
+Para los primeros 50 usuarios, se han utilizado muestras tanto de la primera sesión como de la segunda de cada uno. Además, se han incluido muestras tanto con los ojos abiertos como con los ojos cerrados. Como resultado, se ha conseguido un rendimiento de prueba del $97.58\%$, con una pérdida de $0.08$.
+
+
+
+Para llevar a cabo una evaluación más exhaustiva del clasificador, la matriz de confusión con las identidades reales y las predichas se puede ver en la Figura  \ref{fig:cm1}. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{/cm_1}
+	\caption{Matriz de confusión obtenida para la base de datos 1.}
+	\label{fig:cm1}
+\end{figure}
+
+Como se puede ver, es evidente que el sistema no es capaz de  distinguir con tanta precisión solo entre los sujetos 29 y 33. Una hipótesis que cabría plantearse es si estas dos personas podrían tener una relación paterno-filial o fraternal, poniendo en duda la unicidad de la señal cardíaca en ese caso.
+%vectores v son bastante diferentes a simple vista, poner¿?
+
+La Tabla \ref{rep1} muestra una medición de la calidad de las clasificaciones basada en las siguiente métricas:
+\begin{itemize}
+	\item Precisión: indica si una predicción positiva lo era realmente. \newline
+	\begin{center}
+		$precision=\frac{VP}{VP + FP}$ %CAMBIAR ESTA FRASE!
+	\end{center} 
+	\item \textit{Recall} o exhaustividad: indica cuántos positivos ha identificado el modelo de todos los posibles positivos.
+	\newline
+	\begin{center}
+		$recall=\frac{VP}{VP + FN}$
+	\end{center} 
+	\item \textit{F1-score} o valor F: es la media armónica entre precisión y \textit{recall}. 
+	\newline
+	\begin{center}
+		$F1=2\times\frac{precision\times recall}{precision+recall}$
+	\end{center}
+\end{itemize}
+
+Siendo $VP$ verdaderos positivos, $FP$ falsos positivos y $FN$ salsos negativos.
+
+
+Donde \textit{macro avg} es el resultado de calcular las métricas de cada etiqueta y obtener su media no ponderada, sin tener en cuenta el desequilibrio entre etiquetas, mientras que en \textit{weighted avg} se obtiene la media ponderada \cite{skit}. 
+
+\begin{table}[h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/report1_2_}
+	\caption{Calidad de las clasificaciones obtenidas para la base de datos 1.}
+	\label{rep1}
+\end{table}
+
+
+En este caso, para cada usuario se ha utilizado el mismo número de muestras en la evaluación, y estos valores próximos a 1 para las diferentes métricas muestran una buena calidad de los resultados. Los valores de cada métrica para la identificación de cada usuario pueden verse en \ref{clasif1}. Si nos fijamos en los valores obtenidos para los usuarios 29 y 33 nos damos cuenta que, efectivamente, estos son notablemente inferiores que para el resto de usuarios, con un Valor de F1 igual a 0,68 y 0,58 respectivamente. 
+
+Atendiendo a la norma \textit{ISO/IEC JTC 1/SC 37} \cite{iso} y a \textit{Biometrics Evaluation and Testing (BEAT)} \cite{cmcscores, Poh2012}, la métrica para evaluar un sistema de identificación \textit{closed set} es la curva CMC (\textit{Cumulative Match Characteristic}). En identificación, \textit{$rank(k)$} es el menor valor de $k$ para el cual un identificador correcto de un usuario está entre los principales $k$ identificadores devueltos por el sistema, y su valor varía entre 1 y el número de sujetos (en este caso 50). La curva CMC representa gráficamente los resultados de test, representando en el eje $x$ los valores de \textit{$rank(k)$}, frente a la probabilidad de que la  identificación sea correcta en ese \textit{rank}, en el eje $y$ \cite{rank}.
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{/cmc_1}
+	\caption{Curva CMC obtenida para los datos de prueba de la base de datos 1.}
+	\label{fig:cmc1}
+\end{figure}
+
+Como se puede ver, para este modelo hay un primer fallo de identificación en el \break$\textit{rank} = 30$ %checkear que sea 30
+, lo que indica que el identificador correcto tenía por delante 30 identificadores con una mayor probabilidad. Los demás fallos en la predicción de identidades los encontramos a partir del $\textit{rank} = 4$, dando lugar a una curva muy próxima a la esquina superior izquierda. Teniendo en cuenta que un sistema es mejor cuanto más se acerca a la esquina superior izquierda \cite{Poh2012}, podemos asegurar que el rendimiento de este sistema es muy prometedor.
+
+ 
+ %En otros modelos obtenidos en este trabajo con una peor \textit{accuracy}, la CMC ha sido mejor (ver ANEXO). 
+
+%Además, para comprobar la variabilidad intra-sesiones, entrenamiento con muestras una sesión y test de la otra sesion. para poder comparar, red entrenada al 50-50
+
+ 
+\subsection{Segunda base de datos}
+
+Para la segunda base de datos se ha seguido el mismo procedimiento que para la primera, obteniendo %para una división de los datos $80\%-20\%$, 
+resultados de 96,98\%
+de rendimiento y 0,13 de pérdida. Estos resultados se han obtenido utilizando las muestras de ambas sesiones, es decir, incluyendo tomas en reposo y tras realizar ejercicio. 
+
+Además, como las tomas en las que el usuario ha realizado ejercicio son solo un cuarto del total de las tomas, estas han sido a su vez divididas durante el preprocesado en dos nuevas tomas, atendiendo al incremento en el número de QRS presentes en ellas. Con esta modificación de la base de datos se ha vuelto a entrenar una CNN, consiguiendo mejorar el resultado a un 97,39\% de rendimiento y 0,12 de pérdida.
+Estos valores permiten demostrar que la red es capaz de identificar usuarios aún cuando las muestras incluyen tomas después de haber realizado deporte. 
+
+Las siguientes Figuras y Tablas muestran la matriz de confusión, la medición de la calidad del clasificador y la curva CMC de este modelo, tal y como se ha hecho para la primera base de datos.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{/cm_2}
+	\caption{Matriz de confusión obtenida para la base de datos 2.}
+	\label{fig:cm2}
+\end{figure}
+
+Esta matriz de confusión muestra unos muy buenos resultados de predicción para todos los usuarios por igual. En este caso, como se puede observar, no se ha utilizado el mismo número de muestras para cada usuario. 
+
+\begin{table}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/report2_2_}
+	\caption{Calidad de las clasificaciones obtenidas para la base de datos 2.}
+	\label{rep2}
+\end{table}
+
+
+Los resultados de las métricas de la identificación de cada usuario por separado se pueden ver en \ref{clasif2}. Como se puede apreciar, en este caso sí hay una ligera diferencia entre la media ponderada y sin ponderar de la precisión debido al desequilibrio entre el número de muestras de cada usuario utilizado. 
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{/cmc_2}
+	\caption{Curva CMC obtenida para la base de datos 2.}
+	\label{fig:cmc2}
+\end{figure} 
+
+Para este modelo, la curva CMC muestra un primer fallo de identificación en el $\textit{rank} = 24$. Comparando las dos curvas CMC obtenidas (Figura \ref{fig:cmctodas}), podemos ver cómo a partir del $\textit{rank} = 9$ el rendimiento de este sistema es algo peor que el del primero. Aún así, se puede considerar que se ha obtenido una buena curva CMC.
+
+%COMPARAR TAMBIÉN CON DEEP ECG LA CMC???? 
+
+Como se puede ver, los resultados obtenidos son muy parecidos para ambas bases de datos, lo que demuestra que el ECG se puede utilizar para la identificación de usuarios aún cuando se incluyen muestras registradas después de haber realizado ejercicio, con un incremento notable del ritmo cardíaco. 
+
+\subsection{Base de datos completa}
+
+También se ha entrenado una red para toda la base de datos, incluyendo los 105 usuarios, obteniendo un rendimiento de 95,59\% y una pérdida de 0,18. 
+
+La matriz de confusión de este modelo se puede ver en la Figura \ref{fig:cm_}. Si nos fijamos bien, es posible observar como este modelo sigue sin ser capaz de distinguir con precisión entre los usuarios 29 y 33. Por otro lado, a diferencia del modelo anterior, este nuevo modelo no es capaz de identificar con tanta precisión las muestras del usuario 82, confundiendo a menudo su identidad con la del usuario 93, pero no del revés. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{/cm_}
+	\caption{Matriz de confusión obtenida para los datos de prueba de la base de datos completa.}
+	\label{fig:cm_}
+\end{figure}
+
+La métricas obtenidas en la evaluación de la calidad del sistema se pueden ver en \ref{appe:A3}. 
+
+La curva CMC obtenida para esta base de datos, comparada con las curvas obtenidas para las otras dos bases de datos, puede verse en la Figura \ref{fig:cmctodas}. Aunque el rendimiento de este modelo sea algo peor, se puede apreciar una buena curva CMC, próxima a la obtenida para el modelo que identifica solo a la segunda base de datos.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{/cmc_todas}
+	\caption{Comparación de las CMC obtenidas para las bases de datos 1 y 2, así como la base de datos al completo.}
+	\label{fig:cmctodas}
+\end{figure} 
+%Los demás resultados obtenidos se pueden observar a continuación/ en el anexo (DECIDIR). 
+ 
+ Además, la siguiente Figura (\ref{todo}) muestra una comparativa de la tasa de identificación para el \textit{rank(1)} en función del número de usuarios registrados en el sistema. Cabe recordar que ninguno de los usuarios utilizados para los valores de 50 y 55  son los mismos, mientras que el valor 105 corresponde a la unión de ambos. 
+ 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{/rank1}
+	\caption{Variación de la tasa de identificación en el rank(1) en función del número de sujetos.}
+	\label{todo}
+\end{figure}
+ 
+ Como se puede ver, en este caso la identificación ha empeorado cuando ha aumentado el número de usuarios registrados. Sin embargo, ajustando los hiperparámetros de red de este último modelo, probablemente se podrían llegar a conseguir mejores resultados. 
+ 
+\subsection{Variabilidad intra-clase}
+
+Por último, se ha querido comprobar la estabilidad del ECG como característica biométrica. Para ello, se ha utilizado solo la primera base de datos, entrenando una red con los registros de la primera sesión y evaluando el sistema con los registros de la segunda sesión, y viceversa. Por tanto, la división de muestras en esta configuración ha sido $50\%$ de entrenamiento y $50\%$ de test. Para poder comparar los resultados con los obtenidos cuando las muestras de ambas sesiones están mezcladas, se ha entrenado también otra red con una división $50-50\%$. Los resultados obtenidos han sido los siguientes (Tabla \ref{ses}):
+
+\begin{table}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/interses_2_2}
+	\caption{Comparación de los resultados de rendimiento y pérdida obtenidos con variabilidad intra-clase.}
+	\label{ses}
+\end{table}
+
+
+Se puede apreciar que la identificación de usuarios es notablemente peor cuando la evaluación del sistema se realiza con muestras registradas en  un día diferente al de las muestras utilizadas para el entrenamiento de la red. Por tanto, no podemos demostrar la estabilidad del ECG como característica biométrica con este estudio. 
+
+
+\section{Autenticación} \label{aut}
+
+El proceso de autenticación se divide (como ya hemos visto) en dos fases: reclutamiento y consulta. Para el reclutamiento se ha utilizado el $80\%$ de las muestras de cada usuario del cual se quiere verificar la identidad, y el $20\%$ restantes se han reservado para realizar las consultas. Por tanto, las muestras de verificación nunca se han utilizado en el reclutamiento, ni viceversa.
+
+Para evaluar el sistema se han realizado pruebas sobre 3 modelos diferentes:
+\begin{itemize}
+	\item Modelo 1: se verifica la identidad de los 55 usuarios de la segunda base de datos (que recordamos, incluye tomas registradas después de haber realizado ejercicio). Para ello, se utiliza una red entrenada con los 50 usuarios de la primera base de datos, es decir, el porcentaje de usuarios utilizado para el entrenamiento es del $47\%$. 
+	\item Modelo 2: se verifica la identidad de los 50 usuarios de la primera base de datos, utilizando una red entrenada con los 55 de la segunda ($54\%$).
+	\item Modelo 3: para comprobar la influencia del porcentaje de usuarios utilizados para el entrenamiento, se ha entrenado una nueva red con el $80\%$ de los usuarios totales (84 usuarios) y se ha verificado la identidad del 20\% de usuarios restantes. %Por tanto, en esta configuración, tanto en el entrenamiento como en la autenticación
+\end{itemize}
+
+
+
+\begin{figure}[H]
+	\centering
+	\subfigure{
+		\label{fig:mod1}
+		\includegraphics[width=0.45\textwidth]{/modelo1}}
+	\hspace{1cm}
+	\subfigure{
+		\label{fig:mod2}
+		\includegraphics[width=0.45\textwidth]{/modelo2}}
+	\subfigure{
+		\label{fig:mod3}
+		\includegraphics[width=0.45\textwidth]{/modelo3}}
+	\caption{Esquema de la división de usuarios y de sus muestras para las distintas fases en cada modelo.}
+	\label{mods}
+\end{figure}
+
+Para visualizar los vectores de características obtenidos durante la fase de reclutamiento, se han utilizado las herramientas PCA y TSNE \cite{skit}. Estas herramientas permiten la visualización de datos de grandes dimensiones, mediante la reducción de su dimensionalidad. % (el anexo ref{} incluye una descripción más detallada de ambos algoritmos).
+
+Como se puede ver en la Figura \ref{tsne}, los vectores de características se encuentran bastante agrupados en el espacio en función del usuario al que corresponden. Estas agrupaciones por usuarios son más evidentes en el Modelo 3, pero esto puede deberse a que solo hay 21 usuarios registrados en el sistema y por eso la visualización es mejor. Entre el Modelo 1 y el 2, cabría esperar obtener mejores resultados para el segundo, donde estas agrupaciones están más definidas. Visualizando de esta manera los vectores de características de cada usuario, es bastante evidente que sí se puede distinguir a las personas a través de su señal de ECG. En \ref{pca} se puede ver la visualización de los mismos vectores con la herramienta PCA.
+
+
+\begin{figure}[H]
+	\centering
+	\subfigure[MODELO 1]{
+		\label{fig:tsne1}
+		\includegraphics[width=0.45\textwidth]{/tsne1}}
+	\subfigure[MODELO 2]{
+		\label{fig:tsne2}
+		\includegraphics[width=0.45\textwidth]{/tsne2}}
+	\subfigure[MODELO 3]{
+		\label{fig:tsne3}
+		\includegraphics[width=0.45\textwidth]{/tsne3}}
+	\caption{Comparativa de la distribución de los vectores de características obtenidos durante la fase de reclutamiento para cada modelo, empleando la herramienta de visualización TSNE para reducir a tres dimensiones el espacio.}
+	\label{tsne}
+\end{figure}
+
+
+
+Para evaluar el sistema,  con cada muestra de cada usuario se han realizado consultas genuinas, en las que se compara la muestra con su patrón registrado, pero también consultas de ``impostores'', donde se compara la muestra de ese usuario con los patrones registrados de todos los demás usuarios. Cada consulta, ya sea genuina o no, se considera independiente, luego para \underline{una única muestra} hay tantas consultas como usuarios $(n)$ registrados en el sistema, de las cuales solo $1$ es genuina y el resto $(n - 1)$ de impostores. Aunque en un escenario más realista para un sistema de autenticación se espera que el número de consultas genuinas sea mayor que el de consultas de impostores, en este estudio se ha utilizado esta metodología para poder evaluar más a fondo el rendimiento del sistema con los datos disponibles. 
+
+Como el número de consultas depende del número de usuarios registrados en cada modelo, para llevar a cabo una comparativa entre los mismos se va a hablar siempre del número de muestras \textit{m} por usuario que se ha utilizado para realizar las consultas \textit{q}, con $q = n \times (m \times n)$. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.1\textwidth]{/consultas2}
+	\caption{Esquema de la fase de consulta.}
+	\label{consultas}
+\end{figure}
+
+
+
+La distribución de las distancias euclideas obtenidas al utilizar todas las muestras del set de consulta para realizar con ellas todas las consultas posibles, se puede observar en la Figura \ref{histo}. Como la mayoría de las consultas son de impostores, esta visualización de las distancias permite hacerse una idea de dónde debería establecerse el umbral. 
+Además, se ve claramente como la mayoría de distancias se encuentran dentro de un rango de valores, y solo unas pocas (las correspondientes a las consultas genuinas) tienen una distancia menor. Aunque en el modelo en el que mejor se aprecia es en el 3, esto se debe a que al haber menos usuarios registrados el número de consultas realizadas también es menor (aproximadamente un sexto de las consultas realizadas en los otros 2 modelos). 
+Por otro lado, es notable la diferencia del rango de valores obtenidos para las distancias entre los modelos, estando todas las distancias bastante más concentradas en el Modelo 2 (entre 2,5 y 37). 
+
+%REPASAR ESTE PARRAFO
+
+\begin{figure}[H]
+	\centering
+	\subfigure[MODELO 1]{
+		\label{fig:histo1}
+		\includegraphics[width=0.3\textwidth]{/histo1_}}
+	\subfigure[MODELO 2]{
+		\label{fig:histo2}
+		\includegraphics[width=0.3\textwidth]{/histo2_}}
+	\subfigure[MODELO 3]{
+		\label{fig:histo3}
+		\includegraphics[width=0.3\textwidth]{/histo3_}}
+	\caption{Distribución de usuarios genuinos e impostores mediante la distancia euclídea.}
+	\label{histo}
+\end{figure} 
+
+Atendiendo a la norma \textit{ISO/IEC JTC 1/SC 37} \cite{iso} y a \textit{Biometrics Evaluation and Testing (BEAT)} \cite{cmcscores, Poh2012}, las métricas utilizadas para evaluar un sistema de autenticación son:
+
+\begin{itemize}
+	\item \textit{Failure-to-enrrol rate}: proporción de los usuarios para los que el sistema no ha completado la fase de reclutamiento.
+	\item \textit{Failure-to-acquire rate}: proporción de intentos de verificación o identificación en los que el sistema no logra captar o localizar una imagen o señal de calidad suficiente. 
+	\item Tasa de Falsa Aceptación o FAR (de sus siglas en inglés): proporción de intentos de acceso no autorizados aceptados incorrectamente por el sistema.		
+	\item Tasa de Falso Reconocimiento o FRR (de sus siglas en inglés): proporción de intentos de acceso autorizados denegados incorrectamente por el sistema.
+\end{itemize}
+
+%PONER LAS FORMULAS DEL FAR Y FRR BIEN 
+En este trabajo, la tasa de adquisición se desconoce y la tasa de error de enrolamiento no se ha tenido en cuenta, por lo que se considera también como desconocida.  \\El FAR y el FRR han sido calculados de la siguiente manera:
+\begin{center}
+$FAR =  \frac{\textup{Falsos Positivos}}{\textup{Nº Total de Consultas}}$  
+
+$FRR = \frac{Falsos Negativos}{Nº Total de Consultas}$
+
+\end{center} 
+%como la proporción de falsos positivos $(FP)$ y falsos negativos $(FN)$ sobre el total de comparaciones realizadas $(VP + FP + VN + FN)$, respectivamente. 
+Además, la métrica empleada para comparar el rendimiento de los diferentes modelos ha sido el \textit{Equal Error Rate} (EER), que se obtiene variando el umbral y representando gráficamente las curvas FAR y FRR obtenidas, siendo el EER el punto de intersección entre ambas. 
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{/eer_24_2}
+	\caption{Curvas FAR y FRR. El EER es el punto de intersección entre ambas curvas.}
+	\label{eer}
+\end{figure}
+
+El con el que se ha obtenido mejor EER  ha sido el 2, con un error de tan solo: \break \textbf{$EER_{2}$ = 0,46$\%$}. La Figura \ref{eer} muestra su EER obtenido haciendo uso de todas las muestras disponibles en el set de consulta.
+
+Si comparamos el EER obtenido para los 3 modelos (Figura \ref{eer_compa}), nos encontramos con un peor valor para el primero ($EER_{1} = 0,81\%$). Aún así, este valor de error sigue siendo significativamente bueno y, más aún, si tenemos en cuenta que estamos utilizando una red que no ha sido entrenada con ninguna toma registrada después de hacer ejercicio, para verificar la identidad de usuarios después de haberlo realizado. 
+Si nos fijamos en los resultados obtenidos para el 2º y el $3^{er}$ modelo, observamos que son prácticamente iguales ($EER_{3} = 0.49\%$), por lo que a primera vista parece que aumentar el porcentaje de sujetos con los que se ha realizado la fase de entrenamiento no ha supuesto una mejora.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{/eer_compa}
+	\caption{Comparación del EER obtenido en función del porcentaje de usuarios utilizado para el entrenamiento de la red.}
+	\label{eer_compa}
+\end{figure}
+
+Para analizar más detalladamente el comportamiento del EER, se ha analizado su variabilidad en función de las muestras de cada usuario
+%del número de muestras de cada usuario
+que se utilizan para realizar las consultas. Para ello, se han ejecutado varias veces consultas con \textit{m} muestras por usuario. Estas \textit{m} muestras de cada usuario se seleccionan aleatoriamente de entre todas las disponibles cada vez que se realiza una ejecución con $q = n \times (m \times n)$ consultas. 
+
+En la Figura \ref{var} podemos ver la variación máxima del EER en función del número de muestras por usuario para cada modelo. Esta Figura muestra una clara tendencia en la que la variación máxima del EER disminuye a medida que aumenta el número de muestras utilizado, en todos los modelos. Por tanto, el rendimiento del sistema depende en cierta medida de las muestras con las que se han realizado las consultas, y cuantas más consultas se realizan más fiable es el resultado obtenido. 
+
+Además, es muy significativa la diferencia de magnitud entre el Modelo 3 y los demás, con una variación de más del doble en algunos de los casos. Este dato evidencia que el sistema es más fiable cuantas más consultas se realizan, pues en el Modelo 3 hay menos de la mitad de usuarios registrados y por tanto el número de consultas que se pueden realizar con \textit{m} muestras es mucho menor. Así, cabría pensar que, si se pudiera hacer un mayor número de consultas para evaluar este modelo sí obtendríamos una mejora del rendimiento en función del número de usuarios utilizados para el entrenamiento, como se obtiene en \cite{autentiguia}.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{/var_}
+	\caption{Variabilidad del resultado de error obtenido en función de las muestras utilizadas.}
+	\label{var}
+\end{figure}
+
+En la siguiente Figura (\ref{var_eer}) podemos ver un ejemplo de los EER obtenidos utilizando \textit{m} muestras aleatorias de cada usuario. Teniendo en cuenta la variación de este error que acabamos de comentar, podemos ver cómo aunque se haya obtenido un mejor error para un \textit{m} menor, este resultado depende de las muestras que se hayan utilizado para ese caso concreto, mientras que si aumenta el número de muestras utilizado el resultado es más fiable. 
+\newline
+\begin{figure}[H]
+	\centering
+	\subfigure[MODELO 1]{
+		\label{fig:err1}
+		\includegraphics[width=0.3\textwidth]{/eer_1_}}
+	\subfigure[MODELO 2]{
+		\label{fig:eer2}
+		\includegraphics[width=0.3\textwidth]{/eer_2_}}
+	\subfigure[MODELO 3]{
+		\label{fig:eer3}
+		\includegraphics[width=0.3\textwidth]{/eer_3_}}
+	\caption{Variación del EER en función del número de muestras.}
+	\label{var_eer}
+\end{figure} 
+
+
+%Además, la siguiente FIG muestra cómo varía el EER en función del número de consultas que se hacen para cada modelo, o dicho de otra manera, el número de muestras $m_i$ de cada usuario con las que se realizan las consultas. Si se han realizado $q$ consultas, quiere decir que el número de muestras que se ha utilizado de \underline{cada} usuario es $ m_i = \dfrac{q}{n \times n}$. Estas $m_i$ muestras de cada usuario se cogen aleatoriamente de las $\dfrac{m}{n}$ muestras posibles.
+
+
+
+
+
+
+
+
+
+Por último, se ha comparado el rendimiento de los tres modelos mediante la curva ROC (\textit{Receiver Operating Characteristic curve}). En ella se representa el FAR frente a TAR (\textit{True Acceptance Rate}).
+
+\begin{center}
+	$TAR =  1 - FRR $
+\end{center}
+
+Esta curva es independiente del umbral y permite la comparación del rendimiento de diferentes sistemas bajo unas condiciones similares \cite{iso}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{/roc_definitiva}
+	\caption{Comparación del rendimiento de los tres modelos con la curva ROC.}
+	\label{roc}
+\end{figure}
+
+Como se puede apreciar en la Figura \ref{roc}, el sistema con un peor rendimiento es el Modelo 1, en el que la curva no se acerca tanto a la esquina izquierda. Aún así, la curva obtenida para los tres modelos permite confirmar que puede realizarse la verificación de usuarios obteniendo buenos resultados con cualquiera de ellos. 

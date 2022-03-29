@@ -1,0 +1,30 @@
+\ifglsentryexists{ecg}{}%
+{%
+\gls@defglossaryentry{ecg}%
+{%
+name={ECG},%
+sort={ECG},%
+type={acronym},%
+first={Electrocargiograma\glsspace (ECG)},%
+firstplural={Electrocargiogramas\glsspace (ECGs)},%
+text={ECG},%
+plural={ECGs},%
+description={Electrocargiograma},%
+descriptionplural={Electrocargiograma\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Electrocargiograma},%
+longplural={Electrocargiogramas},%
+short={ECG},%
+shortplural={ECGs},%
+counter={page},%
+parent={},%
+%
+}%
+}%

@@ -1,0 +1,240 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%!
+%
+% -- Introduccion.tex --
+%    Introduccion
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%!
+%!TEX root = ../../Principal/TFG.tex
+\chapter{Introducción y objetivos}
+\label{chap:intro}
+\pagestyle{fancy}
+\thispagestyle{empty}
+%
+\graphicspath{{../Introduccion/Imagenes/}}
+\DeclareGraphicsExtensions{.pdf,.jpg,.png}
+%
+% Empieza a escribir aquí
+\section{Motivación}
+%Le llamo motivación o solo intro??
+
+En el mundo en el que vivimos, la mayoría de áreas de nuestras vidas,  sufren cada día una creciente digitalización. Todos los días, utilizamos servicios en línea, como aplicaciones de nuestro banco para el móvil o las simples comunicaciones vía mail tan presentes en nuestras rutinas, y no dudamos en mantener nuestra información personal en nuestros dispositivos o en almacenamientos en la nube. Sin embargo, esta era digital también ha allanado el camino a una serie de
+nuevos ataques, que incluyen el acceso no autorizado a nuestros datos y dispositivos personales. 
+
+Es curioso como, en general, los usuarios seguimos necesitando una infinidad de contraseñas, un sistema rudimentario que se lleva utilizando para el control de acceso desde los primeros días de la informática. 
+Es por esto que recientemente se ha producido un cambio de enfoque hacia el campo de la autenticación biométrica, que verifica la identidad del usuario utilizando sus características biológicas. 
+
+Una de sus aplicaciones más comunes la vemos en el uso de escáneres de huellas dactilares, como el que poseen muchos smartphones y portátiles. Aunque esto supone un gran avance, todavía quedan problemas sin solucionar relacionados con su usabiliadad y fiabilidad.
+
+Siguiendo con este enfoque novedoso, nos encontramos con el uso de señales fisiológicas unidimensionales, como el electrocardiograma (\acrshort{ecg}), a modo de características biométricas, que está atrayendo cada vez más la atención de la comunidad científica. Algunas de las principales ventajas que presentan estas señales  son:
+\begin{itemize}
+	\item Son difíciles de falsificar.
+	\item Están presentes en todos los seres vivos.
+	\item Contienen información sobre el estado clínico o psicológico, que puede ser utilizada para otras aplicaciones.
+	\item Su adquisición por largos periodos de tiempo no requiere una acción explícita del usuario.
+	\item Presentan características típicas para la identificación biométrica.
+\end{itemize}
+
+Además, entre las técnicas de análisis de señales fisiológicas en el ámbito de la Medicina, el ECG destaca por su madurez y difusión, y estudios recientes demuestran que su aplicación para la biometría puede llegar a obtener una precisión muy elevada. No obstante, esta modalidad biométrica tiene que hacer frente a una serie de problemas, que incluyen: 
+\begin{itemize}
+	\item La alta variabilidad de las muestras causada por el ritmo cardíaco, la realización de actividades y los escenarios en los que han sido tomadas.
+	\item La falta de estudios que demuestren la representatividad entre usuarios con bases de datos a gran escala.
+	\item Los cambios a largo plazo en los rasgos de las personas.
+	\item La protección frente a nuevos ataques.
+	\item La adecuada extracción de características de las señales y el diseño de modelos precisos para el reconocimiento de patrones.
+	%\item "los sistemas biométricos basados en ECG pueden verse afectados por una disminución significativa del rendimiento en escenarios de adquisición no controlados".
+\end{itemize}
+
+%¿PONER ALGO SOBRE MI TRABAJO O YA EN OBJETIVOS?
+
+
+
+%In today?s world, we observe an ever-increasing digitization of most areas of our lives.
+%Every day we make use of online services such as mobile banking or email communication
+%and we do not hesitate to keep our personal information on our devices or
+%cloud storage. Unfortunately, the digital era has also paved the way for a series of
+%new attacks and exploits, including unauthorized access to our personal data and devices
+%by adversaries. It is remarkable how, by and large, users are still burdened by
+%numerous passwords, which have been used for access control since the earliest days
+%of computing.
+%There has been a recent shift of interest towards the field of biometric authentication,
+%which proves the identity of the user using their biological characteristics. The most
+%common one involves using a fingerprint scanner, such as seen in modern smartphones
+%and laptops. While this is a big step forward, there are still problems related to fingerprint
+%usability and reliability. 
+%In this project, I investigate a biometric based on the
+%electrical activity of the human heart in the form of electrocardiogram (ECG) signals.
+%Past research has shown that ECG is unique to each individual [8] and thus could potentially
+%be used for authentication. Nevertheless, current challenges include extracting
+%relevant features from ECG signals, designing accurate models for pattern recognition,
+%proving long-term stability of the biometric and protecting against presentation attacks.
+
+
+
+
+
+
+
+
+\section{Biometría} \label{biometria}
+%mezcla entre samarin y raul
+El término Biometría, dentro del ámbito de la identificación de personas, hace referencia al reconocimiento de personas basado en las características únicas de cada individuo. Estas características pueden ser fisiológicas, permitiendo identificar a una persona mediante su huella dactilar o sus rasgos faciales por ejemplo, o de comportamiento, como su voz o su forma de caminar. 
+
+Esta capacidad de reconocimiento biométrico es innato para los seres vivos, que podemos reconocer a nuestros semejantes. Pero la Biometría como la ciencia que estudia la individualidad de las personas, no nace hasta finales del siglo XIX. A día de hoy, está cada vez más presente en el mundo que nos rodea, y es utilizada en diversas aplicaciones, como sistemas de control de acceso y la autenticación o identificación de usuarios. 
+
+La mayoría de los sistemas de control de acceso existentes, requieren el uso de algo que la persona conoce (p. ej una contraseña) o que tiene (p. ej tokens de seguridad). Sin embargo, mediante la Biometría, esto se puede sustituir por algo que la persona \textit{es}, es decir, sus rasgos, permitiendo así mejorar la usabilidad del sistema, puesto que los usuarios ya no necesitan recordar claves secretas o llevar algo consigo. Además, estas nuevas modalidades no tienen por qué sustituir a las tradicionales, y ambas se pueden combinar, incrementando la seguridad todavía más y actuando como mecanismos de detección de ataques \cite{samarin}.
+
+A la hora de juzgar si un sistema biométrico es válido o no, hay muchos parámetros a tener en cuenta. Algunos de ellos son:
+\begin{itemize}
+	\item Universalidad: las características están presentes y se pueden extraer de cualquier persona.
+	\item Unicidad: las características son suficientemente diferentes de persona a persona. 
+	\item Estabilidad: las características se mantienen invariantes a lo largo de la vida de la persona, independientemente del tiempo, la edad, posibles enfermedades, etc. 
+	\item Facilidad de captura: las características pueden ser extraídas del sujeto de manera sencilla. 
+	\item Rendimiento: el sistema es fiable y fácil de analizar cuando se utiliza	para la identificación personal.
+	\item Aceptación: la recolección y el uso de datos es socialmente aceptable.
+	\item Robustez frente a ataques: las características biométricas no son fácilmente  imitables y suplantables por otro individuo. 
+	\item Coste.
+\end{itemize}
+Por tanto, la modalidad óptima para el reconocimiento biométrico depende de cada situación y entorno, con diferentes requisitos de seguridad, y no se puede afirmar que exista una única técnica, perfecta e ideal, que se pueda utilizar siempre. 
+
+Algunas de las modalidades biométricas ya cuentan con una implantación muy elevada. Por ejemplo, el uso de la huella dactilar en los móviles o el reconocimiento facial en controles automáticos de fronteras, son, sin duda, aplicaciones muy conocidas. Sin embargo, cualquier otra característica biológica o de comportamiento de la persona puede ser usada para realizar su reconocimiento, siempre que sea propia y única de ella. Entre las más conocidas podemos citar las siguientes: iris, voz, andadura, dinámica de teclado, ADN, firma manuscrita, etc. 
+%¿TABLA DE SAMARIN?
+
+Si bien la Biometría ofrece muchas ventajas sobre las técnicas tradicionales de control de acceso, todavía existen serias preocupaciones sobre la seguridad y la privacidad de esta modalidad, al emplear características visibles externamente del individuo, que son susceptibles de ser copiadas o falsificadas. Por ejemplo, los rasgos faciales de una persona pueden ser fácilmente obtenidos de sus fotos en redes sociales, permitiendo este hecho un ataque que daría acceso ilegítimo del atacante a la información y servicios de la persona en cuestión. Es por ello, que se busca el uso de características no visibles, internas, que sean difíciles de copiar. Además, esto permite al sistema tener una \textit{"fe de vida"} del usuario, es decir, detectar que el usuario en cuestión está vivo.
+
+\subsection{Etapas en un sistema de reconocimiento biométrico}
+
+Como ya hemos visto, existen multitud de técnicas de reconocimiento biométrico, basadas en las diferentes características de las personas. A pesar de esta diversidad, podemos establecer un esquema común a todas ellas a la hora de implementar un sistema de identificación biométrica. Así, nos encontramos con dos fases totalmente diferenciadas, e independientes de la técnica empleada, como podemos ver en la Figura \ref{fases}: 
+
+  
+
+
+
+%(CORREGIR ESTE PÁRRAFO:)
+\begin{itemize}
+	\item La primera fase es la de reclutamiento o registro. En esta fase, se toman muestras del usuario y se procesan, de forma que se obtiene un patrón de este usuario, que le caracteriza, y este patrón se almacena. Generalmente, se toman varias muestras durante el proceso, para poder extraer más características del usuario, analizar la repetitividad de las muestras, enseñar al usuario a usar el sistema... y suele ser un proceso supervisado, es decir, hay una persona encargada de la toma de datos y de asegurar la identidad del sujeto.
+	\item La segunda fase es la de consulta o \textit{query}. En esta fase, cada vez que se requiere reconocer a un usuario o verificar su identidad, se toma una nueva muestra y se compara con su referencia almacenada. En el caso de verificación del usuario, resultado de la comparación se establece en base a un umbral.
+\end{itemize}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\textwidth]{/fases_2}
+	\caption{Bloques en un sistema de reconocimiento biométrico.}
+	\label{fases}
+\end{figure}
+
+En cuanto a la elección del umbral en el caso de autenticación, es interesante destacar que si éste aumenta, el sistema se relaja, permitiendo una mayor probabilidad de accesos de personas no autorizadas (Tasa de Falsa Aceptación, o FAR), mientras que si disminuye, el sistema se vuelve más restrictivo, de manera que aumenta la probabilidad de rechazo para personas autorizadas (Tasa de Falso Rechazo, o FRR). Por tanto, su elección dependerá del grado de seguridad que requiera cada sistema.
+
+Además, como se ve en la Figura \ref{fases}, cada una de estas fases está compuesta por diferentes bloques, que permiten caracterizar a la persona a partir de sus rasgos biológicos o de comportamiento . Estas fases son: captura de los datos, pre-procesado de los mismos para facilitar su tratamiento, extracción de características (bloque en el que se fundamenta la capacidad del sistema de distinguir entre sujetos) y comparación de las características con las previamente almacenadas. Esta comparación puede estar basada en las distintas técnicas de reconocimiento de patrones, como por ejemplo, técnicas basadas en modelado de problemas, como las redes neuronales. 
+%¿AMPLIAR MÁS ESTE APARTADO?
+
+%\cite{reillo}
+%(en el trabajo de raul lo pone del revés, cuál está bien¿?) 
+
+%Por otro lado, el modo en el que se hace el reclutamiento no es tampoco trivial. En algunas técnicas basta una única toma de los datos, mientras que en otras puede ser necesario tomar varias muestras y en distintas sesiones (días o semanas). A todo esto habrá que añadir que si el reclutamiento resulta muy pesado, los usuarios del sistema tenderán a rechazar el sistema, por lo que habrá que buscar una solución de compromiso entre la comodidad del usuario, y la obtención de un patrón óptimo.
+%\newpage
+
+\subsection{Identificación y autenticación} \label{idvsau}
+Hasta el momento se ha hecho referencia al reconocimiento biométrico como algo genérico. Sin embargo, cabe diferenciar entre identificación y autenticación. 
+\begin{itemize}
+	\item Identificación: consiste en determinar la identidad de un usuario registrado en el sistema. Para ello, se comparan las características extraídas con los patrones de todos los usuarios. El principal inconveniente de esta funcionalidad es la necesidad de una base de datos para los patrones, lo que implica una capacidad de almacenamiento elevada y una seguridad apropiada en la custodia de los datos. Como posibles aplicaciones podemos encontrar la identificación de delincuentes a partir de imágenes de videovigilancia o el reconocimiento forense. 
+	\item Autenticación o verificación: consiste en determinar si el usuario es realmente quien dice ser. Para ello, además de las características del usuario, éste tiene que comunicar su identidad. El sistema compara estas características con el patrón del usuario indicado, que puede estar almacenado en una base de datos o en un sistema portátil de información, y decide si la petición es válida o no. Por ejemplo, presentar el pasaporte en una frontera es una aplicación de autenticación de usuarios. 
+\end{itemize}
+
+%¿Es muy repetitivo?
+%La identificación y la autenticación biométricas a menudo se llevan a cabo mediante comparación de plantillas o \textit{template matching}. Más específicamente, una \textit{plantilla biométrica} es una instancia registrada de las características biométricas recogidas durante el reclutamiento del sujeto en el sistema. Esta plantilla es almacenado en una galería de plantillas. Cuando se realiza una consulta, se registra una nueva muestra en el sistema y se compara con las plantillas específicas de la identidad solicitada (en autenticación) o con todas las plantillas registradas (en identificación).\cite{samarin}
+
+En este trabajo se va a diseñar tanto un sistema para la  identificación biométrica como uno para la autenticación.
+
+\section{Fisiología del corazón} \label{fisio}
+Antes de analizar la utilidad del electrocardiograma como modalidad biométrica, esta sección presenta un resumen de la fisiología del corazón. 
+
+%Aunque el uso del electrocardiograma (ECG) como señal para el reconocimiento biométrico es una tendencia que se encuentra todavía en un estado muy inmaduro, su uso con propósitos médicos sí ha sido muy extenso en las últimas décadas, en especial en la detección de patologías cardíacas y monitorización de pacientes.
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=0.5\textwidth]{/ECG}
+%	\caption{Esquema General de una señal de ECG}
+%	\label{ondas}
+%\end{figure}
+
+El corazón es el músculo que bombea la sangre en nuestro cuerpo y para ello, se contrae gracias a impulsos eléctricos. Estos impulsos eléctricos pueden ser detectados en la superficie del cuerpo mediante el uso de electrodos. Así, el ECG es la representación gráfica de la actividad eléctrica del corazón, como una señal en función del tiempo, dando como resultado una curva que representa cada ciclo cardíaco y que de forma teórica se puede ver en la Figura \ref{ondas}. 
+Habitualmente, en electrocardiografía se utilizan 12 derivaciones para su obtención.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.55\textwidth]{/ECG}
+	\caption{Esquema General de una señal de ECG. Fuente \cite{samarin}.}
+	\label{ondas}
+\end{figure}
+
+
+
+Como se puede comprobar, dicha señal se compone de varias partes diferenciadas, que corresponden a la despolarización y repolarización de las cámaras del corazón, provocando la contracción y relajación de las mismas. Las distintas fases del funcionamiento del corazón son: 
+
+\begin{itemize}
+	\item Onda P: representa la despolarización de las aurículas.
+	\item Segmento PR: es el tiempo entre la despolarización de la aurícula y el inicio de la despolarización de los ventrículos.
+	\item Complejo QRS: representa la despolarización de los ventrículos. Es la parte más característica de la señal del ECG.
+	\item Segmento ST: corresponde al tiempo antes de que los ventrículos se vuelvan a polarizar.
+	\item Onda T: representa la repolarización ventricular.
+	
+\end{itemize}
+
+Cada uno de estos componentes podría variar tanto en amplitud como en duración, atendiendo a la derivación que se está tomando, el ritmo cardíaco, el estado de estrés, la posición del cuerpo, etc. Evidentemente también varían cuando el usuario sufre alguna patología cardíaca, tal como arritmias, reflujo ventricular, etc. Todas estas variaciones, además de las propias del sujeto, hacen que utilizar esta información como modalidad biométrica, resulte un reto considerable \cite{reillo}.
+
+\section{ECG como modalidad biométrica}
+
+Tras analizar brevemente la fisiología del corazón, en esta sección pasamos a considerar si el ECG podría ser un elemento biométrico viable. 
+
+Como ya se ha mencionado en la sección \ref{biometria}, para que un sistema biométrico sea válido debe ser universal, único y estable, entre otros aspectos. 
+
+En cuanto a la universalidad, es evidente que se cumple en el caso del ECG, pues la actividad eléctrica del corazón está presente en todos los seres vivos, siendo la falta de esta actividad incompatible con la vida.
+
+Por otro lado, la validación de la unicidad del ECG para su uso como método biométrico no es tan fácil de demostrar, debido principalmente a la falta de datos y de estudios que lo prueben. La mayoría de los trabajos que exploran el uso ECG para la identificación de personas no evalúan el rendimiento del sistema para grandes bases de datos, como se ha hecho en otras modalidades biométricas.
+
+Una excepción notable es un estudio de Carreiras \textit{et al.} \cite{Carreiras2016}, que se centra en la unicidad de las señales de ECG . Los autores de este artículo científico evaluaron el rendimiento de su sistema biométrico con una base de datos de registros de ECG recogidos de 618 sujetos y obtuvieron altas tasas de reconocimiento.
+
+Autores como Sufi \textit{et al.}\cite{Sufi2010} afirman la unicidad de la composición, el mecanismo y la actividad eléctrica del corazón humano 
+basándose en el dogma central de la Biología molecular, que establece que la información fluye desde el ADN al ARN y de este a las proteínas.
+
+En el caso de la estabilidad del ECG nos encontramos con todavía menos estudios que la investiguen. Si bien, es posible demostrar la unicidad utilizando datos registrados en un único momento temporal, para demostrar la estabilidad es necesario reunir datos del mismo individuo durante un período de tiempo lo suficientemente largo. La creación de estas grandes bases de datos, para estos estudios longitudinales, es costosa e implica una importante inversión de tiempo, lo que explica el reducido número de estudios que examinan la estabilidad del ECG. 
+
+En un estudio de Silva \textit{et al.} \cite{DaSilva2013} se recogieron datos de ECG de 63 sujetos, con dos sesiones de adquisición de datos separadas por un intervalo de 4 meses. Sus resultados indican que aunque la autenticación biométrica funciona peor para los datos de ECG longitudinales, siguen siendo viables para aplicaciones en el mundo real.
+ 
+ 
+En resumen, el ECG sigue siendo un fuerte candidato a ser usado para el reconocimiento biométrico. Varios estudios han demostrado la unicidad y la estabilidad del ECG, aunque a pequeña escala. Además, la aparición de sensores de ECG de bajo costo proporcionaría una buena oportunidad para que estos fueran incorporados en los sistemas de control de acceso existentes. En contraposición, todavía no hay suficiente investigación sobre la extracción de características de las señales del ECG, que permitan prevenir los ataques de falsificación y garantizar que los sistemas biométricos basados en ECG sean aceptados por el público en general \cite{samarin}.
+ 
+ 
+ 
+ 
+% Por lo tanto, se puede inferir que la singularidad que proporcionan las entidades biométricas existentes se hereda de la singularidad del ADN.
+% 
+% La composición, el mecanismo y la actividad eléctrica del corazón humano heredan la singularidad de la individualidad del ADN.
+% 
+% En términos biológicos, el "dogma central" se refiere al concepto básico de que, en la naturaleza, la información genética fluye generalmente del ADN al ARN (ácido ribonucleico) y a la proteína.
+ 
+%En uno hablan de que es único por el ADN, el otro hace un estudio de la unicidad explícitamente sobre 600 y pico pacientes. 
+
+%Hablar de la estabilidad. 
+%
+%¿Fases aquí o las dejo en biometría?
+%¿Algo más o pasar ya a objetivos?
+
+
+\section{Objetivos}
+
+El objetivo principal de este trabajo consiste en el diseño, desarrollo y evaluación de un novedoso sistema de reconocimiento biométrico a través del ECG basado en \textit{Deep Learning}. Con este sistema se consigue un avance en el uso de esta modalidad biométrica interna de las personas, característica que no solo hace que sea difícil de copiar, sino que también sirve como indicador de vida en la detección de ataques. 
+%LO ESTOY PRESENTANDO YO???? 
+
+Como se puede ver en el siguiente capítulo (\ref{arte}), esta modalidad cuenta todavía con muy pocos estudios concluyentes, situándola en un estado muy preliminar. Por ello, este estudio pretende contribuir a la superación de algunas de las limitaciones de las investigaciones existentes, relacionadas con el uso de esta señal, para el reconocimiento biométrico.
+
+Para ello, hemos diseñado y desarrollado un sistema basado en el uso de una red neuronal convolucional, con la que se puede llevar a cabo una extracción de características que permite la identificación de un conjunto cerrado (\textit{closed set}) y la autenticación de usuarios. Además, la evaluación de este sistema se ha realizado con señales de ECG registradas en varias sesiones, incluyendo tomas después de que el sujeto haya realizado ejercicio, probando que el ECG puede utilizarse característica biométrica.
+
+El desarrollo de este proyecto se ha basado en los algoritmos propuestos por Labati \textit{et al.} en el artículo científico \textit{Deep ECG: Convolutional Neural Networks for ECG biometric recognition} \cite{deepecg}. 
+
+
+
+
+En el capitulo \ref{chap:estado} de este estudio, se revisan las contribuciones  más importantes en el ámbito del reconocimiento biométrico basado en el ECG existentes hasta el momento. Posteriormente, en el capítulo \ref{chap:desarrollo} se realiza una descripción detallada del desarrollo del sistema propuesto, empezando por una contextualización del problema y una descripción de la base de datos utilizada, y describiendo a continuación, en profundidad, los procesos de preprocesado de la señal y de extracción de características que se han llevado a cabo. En el capítulo \ref{chap:resultados} se expone una extensa evaluación del sistema, tanto para la identificación de usuarios como para la verificación de la identidad. Y finalmente, este proyecto concluye en el capítulo \ref{chap:conclusiones}, donde además se presentan posibles líneas futuras de trabajo. 
+
+

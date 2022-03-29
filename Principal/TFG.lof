@@ -1,0 +1,50 @@
+\babel@toc {spanish}{}
+\addvspace {10\p@ }
+\babel@toc {british}{}
+\babel@toc {spanish}{}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Bloques en un sistema de reconocimiento biom\'etrico.\relax }}{4}{figure.caption.6}% 
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Esquema General de una se\~nal de ECG. Fuente \cite {samarin}.\relax }}{5}{figure.caption.7}% 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Flujo de Trabajo.\relax }}{13}{figure.caption.9}% 
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Examen visual de la variabilidad entre los casos capturados.\relax }}{15}{figure.caption.10}% 
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Resultado de aplicar un filtro paso-banda Butterworth.\relax }}{17}{figure.caption.11}% 
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Espectro en frecuencia de la se\~nal de ECG antes y despu\'es de aplicar un filtro paso-banda Butterworth.\relax }}{17}{figure.caption.12}% 
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Detecci\'on de QRS con el algoritmo de Pan-Tompkins.\relax }}{18}{figure.caption.13}% 
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Detecci\'on de picos R.\relax }}{19}{figure.caption.14}% 
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Espectro en frecuencia de la se\~nal sin filtrar.}}}{19}{figure.caption.14}% 
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Espectro en frecuencia de la se\~nal filtrada.}}}{19}{figure.caption.14}% 
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Proceso de la segmentaci\'on de la se\~nal hasta la obtenci\'on del vector V.\relax }}{20}{figure.caption.15}% 
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Ejemplo de un vector V, compuesto por 8 QRS y tiene 1 segundo de duraci\'on. El vector V es la entrada de la CNN.\relax }}{20}{figure.caption.16}% 
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Esquema de la arquitectura de la CNN. La capa densamente conectada solo se utiliza para el entrenamiento de la red y para identificaci\'on.\relax }}{21}{figure.caption.17}% 
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Resumen del modelo empleado con los tama\~nos de las salidas de cada capa.\relax }}{23}{figure.caption.18}% 
+\contentsline {figure}{\numberline {3.11}{\ignorespaces Optimizaci\'on del tama\~no de \textit {batch} y el n\'umero de \textit {epochs} mediante un muestreo de cuadr\IeC {\'\i }cula.\relax }}{25}{figure.caption.20}% 
+\contentsline {figure}{\numberline {3.12}{\ignorespaces Evoluci\'on del rendimiento y de la p\'erdida de entrenamiento y de validaci\'on durante la fase de entrenamiento de la red.\relax }}{26}{figure.caption.21}% 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Matriz de confusi\'on obtenida para la base de datos 1.\relax }}{29}{figure.caption.22}% 
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Curva CMC obtenida para los datos de prueba de la base de datos 1.\relax }}{30}{figure.caption.24}% 
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Matriz de confusi\'on obtenida para la base de datos 2.\relax }}{31}{figure.caption.25}% 
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Curva CMC obtenida para la base de datos 2.\relax }}{32}{figure.caption.27}% 
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Matriz de confusi\'on obtenida para los datos de prueba de la base de datos completa.\relax }}{33}{figure.caption.28}% 
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Comparaci\'on de las CMC obtenidas para las bases de datos 1 y 2, as\IeC {\'\i } como la base de datos al completo.\relax }}{34}{figure.caption.29}% 
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Variaci\'on de la tasa de identificaci\'on en el rank(1) en funci\'on del n\'umero de sujetos.\relax }}{34}{figure.caption.30}% 
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Esquema de la divisi\'on de usuarios y de sus muestras para las distintas fases en cada modelo.\relax }}{36}{figure.caption.32}% 
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Comparativa de la distribuci\'on de los vectores de caracter\IeC {\'\i }sticas obtenidos durante la fase de reclutamiento para cada modelo, empleando la herramienta de visualizaci\'on TSNE para reducir a tres dimensiones el espacio.\relax }}{37}{figure.caption.33}% 
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Esquema de la fase de consulta.\relax }}{38}{figure.caption.34}% 
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Distribuci\'on de usuarios genuinos e impostores mediante la distancia eucl\IeC {\'\i }dea.\relax }}{38}{figure.caption.35}% 
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Curvas FAR y FRR. El EER es el punto de intersecci\'on entre ambas curvas.\relax }}{39}{figure.caption.36}% 
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Comparaci\'on del EER obtenido en funci\'on del porcentaje de usuarios utilizado para el entrenamiento de la red.\relax }}{40}{figure.caption.37}% 
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Variabilidad del resultado de error obtenido en funci\'on de las muestras utilizadas.\relax }}{41}{figure.caption.38}% 
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Variaci\'on del EER en funci\'on del n\'umero de muestras.\relax }}{41}{figure.caption.39}% 
+\contentsline {figure}{\numberline {4.16}{\ignorespaces Comparaci\'on del rendimiento de los tres modelos con la curva ROC.\relax }}{42}{figure.caption.40}% 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {A.1}{\ignorespaces Calidad de las clasificaciones obtenidas para cada usuario de la base de datos completa.\relax }}{\es@scroman {iii}}{figure.caption.45}% 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {B.1}{\ignorespaces Comparativa de la distribuci\'on de los vectores de caracter\IeC {\'\i }sticas obtenidos durante la fase de reclutamiento para cada modelo, empleando la herramienta de visualizaci\'on PCA para reducir a tres dimensiones el espacio.\relax }}{\es@scroman {iv}}{figure.caption.46}% 
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {MODELO 1}}}{\es@scroman {iv}}{figure.caption.46}% 
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {MODELO 2}}}{\es@scroman {iv}}{figure.caption.46}% 
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {MODELO 3}}}{\es@scroman {iv}}{figure.caption.46}% 
+\addvspace {10\p@ }

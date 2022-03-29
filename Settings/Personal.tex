@@ -1,0 +1,21 @@
+
+
+%--- Formato de Tí­tulos de Capí­tulos ------------------------------------------%
+\pagestyle{fancy}
+%\fancyhf{}
+\fancyhead[LO]{\leftmark} % En las páginas impares, parte izquierda del encabezado,aparecerá el nombre de capítulo
+\fancyhead[RE]{\rightmark} % En las páginas pares, parte derecha del encabezado, aparecerá el nombre de sección
+\fancyhead[RO,LE]{\thepage} % Números de página en las esquinas de los encabezados
+\renewcommand{\chaptermark}[1]{\markboth{\textsf{\thechapter. #1}}{}} % Formato para el capítulo: N. Nombre
+\renewcommand{\sectionmark}[1]{\markright{\textsf{\thesection. #1}}} % Formato para la sección: N.M. Nombre
+\renewcommand{\headrulewidth}{0.6pt} % Ancho de la lÃ­nea horizontal bajo el encabezado
+\renewcommand{\footrulewidth}{0.6pt} % Ancho de la lÃ­nea horizontal sobre el pie (que en este ejemplo está vacío)
+\setlength{\headheight}{1.5\headheight} % Aumenta la altura del encabezado en una vez y media
+\fancyfoot[CE]{}
+\fancyfoot[CO]{}
+\fancypagestyle{biblio}{%
+	\fancyhead[RO,LE]{\thepage}%
+	\fancyhead[LO,RE]{\textsf{Bibliografí­a}}%
+	\renewcommand{\headrulewidth}{0.6pt}%
+	\renewcommand{\footrulewidth}{0.0pt}%
+	\setlength{\headheight}{1.5\headheight}}

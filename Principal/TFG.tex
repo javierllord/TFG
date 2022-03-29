@@ -1,0 +1,160 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% -- TFG.tex -- 
+%     Fichero principal
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%-----------------------------------------------------------------------------%
+%\documentclass[a4paper,12pt,twoside]{book}
+\documentclass[a4paper,11pt,oneside]{book}
+%\documentclass[a4paper,11pt,oneside]{book}
+\usepackage{hyperref}
+\usepackage[latin1]{inputenc}
+\usepackage[british,spanish,activeacute]{babel}
+%\usepackage[spanish,activeacute]{babel}
+\usepackage{enumitem} %itemizes, enumarate y descriptions a medida
+\usepackage[bf,sf,small]{titlesec} %Dar formato a títulos de capitulos, secciones etc...
+\usepackage{fancyhdr} %encabezado y pie de página
+\usepackage{fancybox}
+\usepackage{listings} %Listado de código decentes %Para introducir código de programación
+\usepackage{setspace} %Interlieando
+%\usepackage{xcolor} %utilidades para coloreado
+\usepackage[right=3cm,left=3cm,top=3cm,bottom=3cm,headsep=0.5cm,footskip=1cm]{geometry} % Permite cambiar los márgenes
+%\usepackage{versions} %Mostrar/ocultar partes
+\usepackage{wrapfig}
+
+%\usepackage[utf8]{inputenc}
+%\usepackage{acronym} %Acrónimos
+\usepackage[acronym, toc]{glossaries}
+\makeglossaries
+\usepackage{tocbibind} %Añadir bibliografía, listas de tablas, figuras, etc. de contenidos
+%\usepackage{crop} %Marcas de corte
+\usepackage{multicol} %Escribir en varias columnas
+\usepackage[absolute,showboxes]{textpos}
+\usepackage{tabularx}
+\usepackage{graphicx} % Incluir gráficos
+\usepackage{bm} %negritas de letras griegas
+\usepackage[scriptsize,sf,bf]{subfigure}
+\usepackage{float} % Para colocar la figura dónde uno quiere.
+%\usepackage{hyperref}
+%\usepackage{url}
+\usepackage{amsmath,amssymb,amsfonts,latexsym,cancel,delarray}
+%\usepackage{esint} %Paquetes de fuentes matemáticas adicionales (mirar en la web)
+\usepackage{indentfirst} %identación de primera linea del párrafo
+
+\usepackage{pgf} %inserta imagnes
+%\usepackage{tikz}
+%\usetikzlibrary{arrows}
+%\usetikzlibrary{trees}
+
+
+
+\hypersetup{pdftitle={TFG - Irene Marin Radoszynski}}
+\hypersetup{pdfsubject={Diseño y desarrollo de un sistema de reconocimiento biométrico a través del ECG basado en Redes Nueronales Convolucionales}}
+\hypersetup{pdfauthor={Irene Marín Radoszynski}}
+\hypersetup{pdfpagemode=UseOutlines}
+\hypersetup{colorlinks=true}
+%\hypersetup{bookmarks=true,bookmarksnumbered=true}
+%\hypersetup{color=black}
+\hypersetup{linkcolor=black}
+\hypersetup{citecolor=black}
+\hypersetup{urlcolor=black}
+
+\usepackage{caption} %Epígrafes de figuras, tablas y márgenes
+\DeclareCaptionLabelSeparator{OnePoint}{.\:}
+\DeclareCaptionStyle{scriptStyle}{aboveskip=0.7cm,singlelinecheck=false,justification=centering,
+labelsep=OnePoint,labelfont={bf,sf,normalsize},textfont={normalsize}}
+\captionsetup[figure]{style=scriptStyle}
+\captionsetup[table]{style=scriptStyle}
+
+\setlength{\parindent}{7mm}
+\setlength{\parskip}{2.5mm}
+
+%\setlength{\cftbeforechapskip}{10pt}
+
+\newcommand{\matlab}{\textsc{Matlab}}
+\newcommand{\dif}{\mathrm{d}}
+
+%-----------------------Titulo de los capítulos-------------------------------%
+\newcommand{\bigrule}{\titlerule[0.5mm]}
+%\renewcommand{\bfdefault}{sbc}
+%-----------------------------------------------------------------------------%
+\newcommand{\chapformat}[1]{%
+\parbox[b]{0.75\textwidth}{\filleft\sf\bfseries #1}%
+\quad\rule[-12pt]{2pt}{100pt}\quad\hspace{2mm}{\hspace{2mm}}}
+%-----------------------------------------------------------------------------%
+\titleformat{\chapter}[block]%
+{\filleft\Huge}{}{0pt}{\chapformat}[\vspace{-1.5mm} \bigrule \vspace{10mm}]
+\titlespacing*{\section}{0pt}{*3}{*2}[1pc]
+%-----------------------------------------------------------------------------%
+\input{../Settings/Comandos}
+\input{../Settings/Personal}
+
+\input{../Glosario/Tex/Glosario.tex}
+
+%%%%%%%%%%%%%%%%%% B E G I N   D O C U M E N T %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\frontmatter
+\input{../Portada2/Tex/Portada2.tex}
+\input{../Portada/Tex/Portada.tex}
+\input{../Portada2/Tex/Portada2.tex}
+\input{../Resumen/Tex/Resumen.tex}
+\input{../Agradecimientos/Tex/Agradecimientos.tex}
+
+
+
+%-----------------------------------------------------------------------------%
+\renewcommand{\listtablename}{Índice de tablas}
+\renewcommand{\tablename}{Tabla}
+\tableofcontents
+
+\listoffigures
+\listoftables
+
+%\include{../Nomenclature/Tex/Nomenclature.tex}
+%\printglossary[type=\acronymtype]
+
+
+
+
+\clearpage\hfill\thispagestyle{empty}\null\newpage
+%-----------------------------------------------------------------------------%
+\mainmatter
+%-----------------------------------------------------------------------------%
+\renewcommand{\chapformat}[1]{%
+	\parbox[b]{0.75\textwidth}{\filleft\sf\bfseries\thechapter.~ #1}%
+	\quad\rule[-12pt]{2pt}{100pt}\quad\hspace{2mm}{\hspace{2mm}}}
+
+
+
+%-----------------------------------------------------------------------------%
+
+\input{../Introduccion/Tex/Introduccion.tex}
+
+\input{../EstadoArte/Tex/EstadoArte.tex}
+\input{../Desarrollo/Tex/Desarrollo.tex}
+\input{../Conclusiones/Tex/Conclusiones.tex}
+
+
+%-----------------------------------------------------------------------------%
+
+%-----------------------------------------------------------------------------%
+\null\pagestyle{fancy}\newpage\null\pagestyle{empty}\clearpage
+\renewcommand{\chapformat}[1]{%
+	\parbox[b]{0.75\textwidth}{\filleft\sf\bfseries #1}%
+	\quad\rule[-12pt]{2pt}{100pt}\quad\hspace{2mm}{\hspace{2mm}}}
+\pagenumbering{roman}
+\appendix
+%\backmatter
+\input{../ApendiceA/Tex/ApendiceA.tex}
+\input{../ApendiceC/Tex/ApendiceC.tex}
+\input{../ApendiceB/Tex/ApendiceB.tex}
+\clearpage
+\pagestyle{biblio}
+\bibliographystyle{IEEEtran}
+%\bibliographystyle{IEEEtranDOI}
+\bibliography{library}
+
+	
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

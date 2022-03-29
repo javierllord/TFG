@@ -1,0 +1,126 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%!
+%
+% -- Resultados.tex --
+%    Resultados y conclusiones
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%!
+%!TEX root = ../../Principal/TFG.tex
+\chapter{Conclusiones}
+\label{chap:conclusiones}
+\pagestyle{fancy}
+\thispagestyle{empty}
+%
+\graphicspath{{../Conclusiones/Imagenes/}}
+\DeclareGraphicsExtensions{.pdf,.jpg,.png}
+%
+% Empieza a escribir aquí
+\section{Conclusiones}
+
+Con este proyecto, se ha querido probar la fiabilidad que ofrece la actividad eléctrica del corazón registrada con el ECG como una característica biométrica, que permita tanto la identificación de usuarios, como su autenticación. Para ello, se ha diseñado un sistema basado en redes neuronales convolucionales (CNN), con las que se ha realizado una extracción de características, indicando quién es el usuario registrado más cercano, en el caso de la identificación, y obteniendo patrones biométricos, en el caso de la verificación de identidad. 
+
+Además, se ha evaluado el sistema implementado para ambas modalidades biométricas, haciendo uso de una base de datos especialmente diseñada para el reconocimiento de usuarios a través de su ECG. Esta base de datos incluye muestras de 105 usuarios registradas en dos sesiones diferentes para cada uno, separadas entre sí por un mínimo de una semana. En estas sesiones, se han llevado a cabo diferentes experimentos para el registro de la señal, incluyendo tomas en las que el usuario se encuentra sentado, de pie e, incluso, tomas realizadas después de someter al usuario a un ejercicio físico, acelerando el ritmo cardíaco hasta llegar a los 130 latidos por minuto. Con ello, hemos querido probar tanto la unicidad del ECG como característica biométrica, como su estabilidad.
+
+En primer lugar, estas señales han sido sometidas a una fase de preprocesamiento, que incluye el filtrado de la señal, su segmentación basada en la detección de picos R, y la obtención de un vector formado por 8 complejos QRS concatenados. Este vector se ha utilizado como entrada (\textit{input}) de una red neuronal, que ha permitido llevar a cabo el reconocimiento de usuarios. 
+
+En el caso de la identificación, se han realizado diferentes pruebas para un conjunto cerrado (\textit{closed set}) de los usuarios de la base de datos. Por un lado, se ha demostrado que la identificación de 50 usuarios, cuyas tomas de ECG han sido registradas en dos sesiones diferentes, se puede conseguir con una exactitud del \textbf{97,58\%}. Además, si se evalúa el rendimiento del sistema con 55 usuarios cuyas tomas, además de haber sido registradas en dos sesiones diferentes, incluyen muestras en las que el usuario se encontraba tanto sentado como de pie, y tanto en reposo como después de haber realizado deporte, la exactitud obtenida ha sido del \textbf{ 97,39\%}. Finalmente, la evaluación del sistema utilizando los 105 usuarios juntos, ha permitido demostrar la unicidad del ECG como característica biométrica, con un rendimiento del \textbf{95,59\%}. Esta disminución de la exactitud obtenida al aumentar el número de sujetos se ve condicionada, en parte, por una optimización de hiperparámetros menos que se ha realizado de manera menos exhaustiva que en el caso de los otros dos modelos. 
+
+En cuanto a la estabilidad del ECG para su uso en la identificación de usuarios, sí podemos confirmar que el rendimiento del sistema es muy elevado cuando ha sido entrenado con registros de diferentes días y bajo diferentes condiciones. Sin embargo, no hemos podido probar que el ECG sea una característica estable, pues el rendimiento del sistema ha disminuido notablemente cuando el entrenamiento se ha realizado con tomas registradas un día diferente al día de registro de las tomas utilizadas para su evaluación, siendo, además, el número de usuarios de la base de datos no excesivamente alto.
+
+En el caso de la autenticación, la evaluación del sistema se ha realizado con usuarios diferentes a los utilizados para el entrenamiento de la red neuronal. De esta manera, ha sido posible verificar la identidad de 55 usuarios, cuyas muestras habían sido registradas incluyendo la condición del ejercicio, con un sistema entrenado sin este tipo de muestras, con un EER del \textbf{0,81\%}. Si además, el sistema sí es entrenado con muestras bajo esta condición, se consigue una mejora del rendimiento del sistema, obteniendo un EER de tan solo el \textbf{0,45\%}.
+
+Estos resultados obtenidos para ambas modalidades, nos permiten confirmar que el ECG se puede utilizar para el reconocimiento biométrico con un rendimiento muy elevado, demostrando que esta novedosa técnica es potencialmente prometedora.
+
+La comparación de los resultados obtenidos en este proyecto con otros estudios, basados también en redes neuronales, se puede observar en la siguiente Tabla \ref{final}.
+
+
+%\begin{table}[H]
+%	\centering
+%	\begin{tabularx}{0.9\textwidth}{ 
+%			%c c c c c c }
+%			>{\raggedright\arraybackslash}X
+%			>{\centering\arraybackslash}X
+%			>{\centering\arraybackslash}X
+%			>{\centering\arraybackslash}X
+%			>{\centering\arraybackslash}X
+%			>{\raggedleft\arraybackslash}X}
+%		
+%		Autor & Usuarios & Preprocesado & Método & Tasa de Identificación & EER de autenticación \\
+%		\hline
+%		Labati \textit{et al.} \cite{deepecg} & 52 & Parcialmente-local & CNN & 100\% & - \\
+%		\hline
+%		Zhang \textit{et al.} \cite{Zhang2017}& 18 a 47 & Sin preprocesar & CNN & 93,5\% & - \\
+%		\hline
+%		Zhang \textit{et al.} \cite{Zhang2018}& 18 a 47 & Parcialmente-local & CNN & 95\% & - \\
+%		\hline
+%		Pinto \textit{et al.} \cite{Pinto2019}& 1019 & Sin preprocesar &CNN  & - & 7,86\% \\
+%		\hline
+%		Pinto \textit{et al.} \cite{deep}& 1019 & Sin preprocesar & CNN & 96,1\% & - \\
+%		\hline
+%		Salloum {et al.} \cite{autentiguia}& 47 &  Parcialmente-local & RNN & 100\% & 0\% \\
+%		\hline
+%		Estudio propuesto & 105 &  Parcialmente-local & CNN & 95,59\% & 0,45\% \\
+%		\hline
+%		
+%	\end{tabularx}
+%\caption{Comparativa de estudios existentes basados en redes neuronales para la identificación y autenticación biométrica a través del ECG.}
+%\label{final}
+%\end{table}
+
+\begin{table}[H]
+	\centering
+	%\begin{tabularx}{1\textwidth}{ 
+	%		%c c c c c c }
+	%		>{\raggedright\arraybackslash}X
+	%		>{\centering\arraybackslash}X
+	%		>{\centering\arraybackslash}X
+	%		>{\centering\arraybackslash}X
+	%		>{\centering\arraybackslash}X
+	%		>{\raggedleft\arraybackslash}X}
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{c c c c c c }
+			\hline
+			Autor & Usuarios & Preprocesado & Método & Tasa de Identificación & EER de autenticación \\
+			\hline
+			Labati \textit{et al.} \cite{deepecg} & 52 & Parcialmente-local & CNN & 100\% & 1,05 \\
+			\hline
+			Zhang \textit{et al.} \cite{Zhang2017}& 18 a 47 & Sin preprocesar & CNN & 93,5\% & - \\
+			\hline
+			Zhang \textit{et al.} \cite{Zhang2018}& 18 a 47 & Parcialmente-local & CNN & 95\% & - \\
+			\hline
+			Pinto \textit{et al.} \cite{Pinto2019}& 1019 & Sin preprocesar &CNN  & - & 7,86\% \\
+			\hline
+			Pinto \textit{et al.} \cite{deep}& 1019 & Sin preprocesar & CNN & 96,1\% & - \\
+			\hline
+			Salloum {et al.} \cite{autentiguia}& 47 &  Parcialmente-local & RNN & 100\% & 0\% \\
+			\hline
+			Sistema propuesto & 105 &  Parcialmente-local & CNN & 95,59\% & 0,45\% \\
+			\hline
+			
+	\end{tabular}}
+	\caption{Comparativa de estudios existentes basados en redes neuronales para la identificación y autenticación biométrica a través del ECG.}
+	\label{final}
+\end{table}
+ 
+
+Por último, cabe destacar el bajo coste computacional que requiere tanto la fase de identificación como la fase de consulta de la verificación de la identidad. Para la implementación de este estudio, se ha utilizado un ordenador portátil con un procesador Intel(R) Core(TM) i7-8550U CPU de 1,8GHz, con una RAM de 12 GB. El tiempo de identificación de cada muestra ha sido de 0,478 ms y el tiempo para la comparación de patrones en autenticación ha sido de 0,609 ms  para cada consulta. Estos valores tan bajos, permiten que estos sistemas se puedan llegar a emplear en escenarios reales para el reconocimiento biométrico.
+
+
+\section{Lineas futuras}
+
+
+En esta sección, presentamos posibles líneas futuras de trabajo que podemos introducir gracias a este proyecto:
+
+\begin{itemize}
+
+	\item Mejorar el rendimiento del sistema de identificación cuando aumenta el número de usuarios registrados, llevando a cabo una búsqueda más exhaustiva de hiperparámetros del modelo.
+	\item Diseñar y desarrollar un sistema de identificación de usuarios de un conjunto abierto (\textit{open set}). Para ello, bastaría con determinar un umbral en el sistema implementado en este proyecto, que permitiera clasificar al usuario como no registrado, cuando la probabilidad de pertenecer a una de las clases registradas no sea en ningún caso superior a dicho umbral.
+	\item Implementar un sistema basado en redes neuronales convolucionales con una fase de preprocesado menos compleja, que permita el reconocimiento de usuarios a partir de fragmentos de las señales de ECG, sin la necesidad de ser segmentadas en base a la detección de picos R. 
+	\item Demostrar la estabilidad del ECG como característica biométrica para ambas modalidades, consiguiendo una mejora del rendimiento del sistema cuando se trabaja con muestras registradas en diferentes sesiones y bajo diferentes condiciones. Para ello, se podría implementar una base de datos multisesión propia, que incluya tomas de diferentes días y horas, además de diferentes situaciones que generen alteraciones del ritmo cardíaco del usuario (actividades deportivas, pruebas de estrés, etc).
+\end{itemize}
+%Identificación open set
+%Identificación muestras diferentes días 
+%
+%Autenticación muestras también diferentes días
+%
+%Reducir la complejidad de la fase de preprocesado, redes directamente con fragmento de señal ``raw''
+

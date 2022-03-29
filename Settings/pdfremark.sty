@@ -1,0 +1,68 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% This is just a summary snippet of what I (Jürgen Spitzmüller
+%% <j.spitzmueller@gmx.de>) have found in the newsgroups
+%% about inserting annotations into pdf files.
+%% You probably need pdftex >= v. 0.14 to get this work, older versions
+%% have not been tested.
+%%
+%% Credits go to the people I have taken the code from, especially 
+%% Carsten Zerbst (cf.
+%% http://groups.google.de/group/de.comp.text.tex/browse_thread/thread/f761a21ddda537d5
+%% and Heiko Oberdiek (many posts on the topic)
+%%
+%% usage \pdfremark[Remark Title]{Remark Text}
+%% line breaks can be inserted with \\.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{pdfremark}
+	[2007/12/29 v0.3 Insert annotations to PDF files]
+
+\RequirePackage{ifpdf}
+
+\ifpdf
+
+% pdftex versions < 0.14
+\@ifundefined{pdfstartlink}{% 
+	\def\pdfstartlink{\pdfannotlink}}{}
+
+\newcommand{\pdfremark}[2][]{%
+  \edef\\{\string\r}%
+  \mbox{%
+    \pdfstartlink
+    %% Placement of the annotation
+    %% Might be tweaked
+    % width \linewidth
+    height \baselineskip
+    depth 0pt
+    user {%
+	/C [255 255 0] % color: yellow
+	/Subtype /Text
+	/T (#1) % the title
+	/Contents (#2) % the actual comment
+	}%
+    \pdfendlink
+  }%
+}
+
+\else
+
+% use dvi specials for dvipdfm(x)
+\newcommand{\pdfremark}[2][]{%
+   \edef\\{\string\r}%
+   \special{pdf: ann
+    %% Placement of the annotation
+    %% Might be tweaked
+    width 3.0in
+    height 12pt
+    << /Type /Annot
+    /C [255 255 0] % color: yellow
+    /Subtype /Text
+    /T (#1) % the title
+    /Contents (#2) % the actual comment
+    >>}%
+}
+
+\fi
+
+% finis

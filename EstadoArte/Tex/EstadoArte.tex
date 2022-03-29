@@ -1,0 +1,126 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%!
+%
+% -- EstadoArte.tex --
+%    Estado del arte
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%!
+%!TEX root = ../../Principal/TFG.tex
+\chapter{Estado del arte} \label{arte}
+\label{chap:estado}
+\pagestyle{fancy}
+\thispagestyle{empty}
+%
+\graphicspath{{../EstadoArte/Imagenes/}}
+\DeclareGraphicsExtensions{.pdf,.jpg,.png}
+%
+% Empieza a escribir aquí
+
+
+Si bien el uso del ECG como modalidad biométrica no es una idea nueva, siendo pioneros en esta técnica trabajos como el de Biel \textit{et al.} \cite{biel2001} y el de Kyoso \textit{et al.} \cite{Kyoso2001} (2001), esta modalidad todavía se encuentra en un estado muy inmaduro, no tanto debido al número de estudios existentes, sino a la falta casi absoluta de consenso en las metodologías apropiadas para su aplicación. 
+
+Odinaka \textit{et al.} presenta en \cite{Odinaka2012} una extensa y detallada comparativa del estado de la técnica hasta el año 2012. En este capítulo se ofrece una breve descripción de la literatura científica de los últimos años sobre esta modalidad.
+
+A la hora de diseñar un sistema biométrico basado en el ECG, hay que tener muy en cuenta una serie de aspectos que van a influir notablemente en su rendimiento. Por esta razón, el estado de la técnica puede diferenciarse en función de cómo se han llevado a cabo las etapas de adquisición de datos, procesamiento de la señal y comparación de características.
+
+%\nameref{datos}, el \nameref{procesa} y la \nameref{ext}.
+ 
+
+
+\section{Adquisición de datos} \label{datos}
+
+La mayoría de técnicas actuales utilizan bases de datos ya existentes y solo unas pocas investigan la estabilidad y usabilidad del ECG como método biométrico.
+ 
+Si nos fijamos en la posición de los electrodos, mientras que la mayoría de estudios utilizan bases de datos capturadas con electrodos localizados directamente en el cuerpo de la persona \cite{Carreiras2016,Eduardo2017,steven,Jekova2018}, en biometría basada en ECG un escenario más realista es aquél en el que la adquisición se realiza con sensores de ECG móviles. Por ejemplo, Falconi \textit{et al.} \cite{Falconi} incluyó sensores en fundas de smartphones y Silva \textit{et al.} \cite{DaSilva2013} en reposamuñecas de ordenador. 
+
+Por otro lado, si nos atenemos al tipo de autenticación requerida por el sistema, ésta suele ser una verificación única en un instante dado, es decir, en el momento en el que se realiza la petición del recurso (para acceder a un edificio o a un servicio bancario, por ejemplo). Sin embargo, también puede  resultar interesante una autenticación continua, en la que la identidad del usuario se verifica en todo momento mientras el recurso esté en uso (conduciendo un coche, por ejemplo) \cite{deepecg,Pinto2017,Coutinho2011}.
+
+Otro factor a tener en cuenta a la hora de la adqusición de las muestras de ECG, es el periodo de tiempo en las que éstas han sido registradas. Así, la estabilidad de los estudios basados en registros tomados en una única sesión, no pueden considerarse como concluyente. Samarin \textit{et al.} \cite{samarin} aborda esta limitación, teniendo como componente central la confección de una base de datos de ECG propia para la autenticación de usuarios, con dos sesiones diferentes para la toma de datos. Reíllo \textit{et al.} \cite{reillo} también basa su trabajo sobre una base de datos propia, con una representatividad aceptable tanto para la autenticación intra-clase, como para la inter-clase, registrando muestras en dos días diferentes de 105 usuarios.
+
+Por último, la mayoría de bases de datos ya existentes tienen un propósito médico, y no de reconocimiento de usuarios. Esto supone una gran limitación a la hora de usarlas para identificación de personas, pues no son representativas para una realidad en la que la mayoría de usuarios del sistema biométrico no tendrían afecciones cardíacas. 
+
+\section{Procesamiento de la señal} \label{procesa}
+
+La elección de características utilizadas para el procesamiento de la señal de ECG también deja clara una falta absoluta de línea directriz común en las investigaciones existentes. 
+
+El procesamiento de la señal puede estar basado en el uso de características locales (fiduciales), parcialmente fiduciales o características globales (no-fiduciales). 
+
+
+Los métodos fiduciales son aquellos que se basan en obtener, para cada ciclo cardíaco, los puntos característicos (por ejemplo, máximo de la onda P, puntos Q, R, S, etc), y obtener de ellos los vectores de características (que constituyen los \textit{templates} o patrones). Estos métodos se han utilizado con éxito en varios estudios \cite{steven, Jekova2018, Falconi}, pero requieren algoritmos específicos para localizar los puntos de referencia de la señal.
+
+Los métodos parcialmente fiduciales localizan sólo los picos R (en el complejo QRS), y a partir de ellos se segmentan los ciclos cardíacos de la señal. Tras el preprocesado, estos segmentos son adoptados por el sistema biométrico como patrones \cite{Carreiras2016, DaSilva2013, deepecg}.
+
+Por último, los métodos basados en las características globales utilizan mecanismos de procesado tales como la transformada discreta del coseno (DCT), wavelets, redes neuronales, etc. En casi todos estos casos, se parte de la premisa de que un ciclo cardíaco va a ser prácticamente igual al anterior y al siguiente y no es necesario extraer puntos de referencia de la señal \cite{Pinto2017,Coutinho2011}. 
+
+
+\section{Comparación de patrones}\label{ext}
+
+\textit{Template matching}, o comparación de patrones, hace referencia al proceso de verificación de la consulta biométrica con respecto a los patrones almacenados. Igual que pasa con el procesado, para la comparación de patrones tampoco se puede ver una trayectoria única a la hora de determinar qué algoritmos se deben utilizar. 
+
+En \cite{reillo} se presenta una detallada comparación de las diferentes técnicas utilizadas, así como de los resultados obtenidos. 
+
+En este trabajo, resulta de especial interés la aplicación del \textit{Deep Learning}, y en concreto, el uso de redes neuronales convolucionales. La literatura existente presenta numerosos estudios basados en este tipo de aprendizaje aplicado a la Biometría, especialmente en reconocimiento facial y de iris, e incluso con señales unidimensionales como es el caso del reconocimiento por voz. Sin embargo, la aplicación de las CNNs a la señal del ECG es considerada por muy pocos estudios hasta la fecha, y la mayoría se  centran en la clasificación de arritmias y no en aplicaciones biométricas \cite{Li2018, Pyakillya2017}. 
+
+Así, el uso de CNNs para el reconocimiento biométrico basado en ECG es muy novedoso y cuenta con muy pocos estudios llevados a cabo hasta el momento.
+
+En 2017, Song-Kyoo \textit{et al.} presentó un posible marco de trabajo para la aplicación de las CNNs en la autenticación biométrica con ECG en \cite{framework}.
+
+También en 2017, Zhang \textit{et al.} presentó en \cite{Zhang2017} un algoritmo basado en CNNs para identificar usuarios, utilizando segmentos aleatorios de sus señales ECG sin una gran ingeniería de extracción de características y consiguiendo una independencia respecto a los datos utilizados con una gran capacidad de generalización. Además, unos meses después, propuso en \cite{Zhang2018} un novedoso sistema de ECG corporal, con electrodos colocados en el brazo o detrás de las orejas, para identificar individuos utilizando estos registros débiles de los latidos del corazón gracias a la aplicación de una red neuronal convolucional, obteniendo resultados prometedores para las ``aplicaciones de salud inteligentes'' (del inglés \textit{smart health applications}). 
+
+
+%Zhang 1 = 93,5% !!!
+%zhang 2 =  98.4% (single-arm-ECG) and 91.1% (ear-ECG)
+
+ 
+\textit{Deep-ECG: Convolutional Neural Networks for ECG biometric recognition} \cite{deepecg}, publicado en 2019 y utilizado como estudio de referencia en este trabajo, utiliza las CNNs para extraer características de usuarios durante la fase de entrenamiento de la red y a continuación realiza una fase de identificación \textit{closed set}, y otra de verificación de la identidad y re-autenticación periódica, con usuarios diferentes a los utilizados para entrenar la red. 
+
+Y finalmente, también en 2019, Pinto \textit{et al.} presentó otras dos aplicaciones de las CNNs para el reconocimiento biométrico basado en ECG en \cite{Pinto2019} y \cite{deep}. Ambos estudios presentan novedosos métodos que permiten llevar a cabo tanto la identificación como la autenticación de usuarios sin la necesidad de preprocesar las señales ECG, obteniendo resultados muy prometedores para ambas modalidades tras una evaluación de los métodos propuestos sobre varias bases de datos. 
+
+%: \textit{An End-to-End Convolutional Neural Network for ECG-Based Biometric Authentication}\cite{Pinto2019} y \textit{Deep Neural Networks For Biometric Identification Based On Non-Intrusive ECG Acquisitions} \cite{deep}. Ambos estudios presentan novedosos métodos que permiten llevar a cabo tanto la identificación como la autenticación de usuarios sin la necesidad de preprocesar las señales ECG, y han obtenido resultados muy prometedores para ambas modalidades tras una evaluación de los métodos propuestos sobre varias bases de datos. 
+
+
+
+
+
+%SE ME HA QUEDADO SIN PONER EL DE CONV 2D
+
+La siguiente Tabla \ref{tablacompa} muestra una comparativa de los resultados obtenidos en estos últimos trabajos citados. 
+
+
+
+
+\begin{table}[H]
+\centering
+%\begin{tabularx}{1\textwidth}{ 
+%		%c c c c c c }
+%		>{\raggedright\arraybackslash}X
+%		>{\centering\arraybackslash}X
+%		>{\centering\arraybackslash}X
+%		>{\centering\arraybackslash}X
+%		>{\centering\arraybackslash}X
+%		>{\raggedleft\arraybackslash}X}
+ \resizebox{\textwidth}{!}{%
+	\begin{tabular}{c c c c c c }
+	\hline
+	Autor & Usuarios & Preprocesado & Método & Tasa de Identificación & EER de autenticación \\
+	\hline
+	Labati \textit{et al.} \cite{deepecg} & 52 & Parcialmente-local & CNN & 100\% & 1,05 \\
+	\hline
+	Zhang \textit{et al.} \cite{Zhang2017}& 18 a 47 & Sin preprocesar & CNN & 93,5\% & - \\
+	\hline
+	Zhang \textit{et al.} \cite{Zhang2018}& 18 a 47 & Parcialmente-local & CNN & 95\% & - \\
+	\hline
+	Pinto \textit{et al.} \cite{Pinto2019}& 1019 & Sin preprocesar &CNN  & - & 7,86\% \\
+	\hline
+	Pinto \textit{et al.} \cite{deep}& 1019 & Sin preprocesar & CNN & 96,1\% & - \\
+	\hline
+	Salloum {et al.} \cite{autentiguia}& 47 &  Parcialmente-local & RNN & 100\% & 0\% \\
+	\hline
+
+\end{tabular}}
+\caption{Comparativa de estudios existentes basados en redes neuronales para la identificación y autenticación biométrica a través del ECG.}
+\label{tablacompa}
+\end{table}
+
+
+Como conclusión, es muy difícil poder comparar los resultados obtenidos en los diversos trabajos previos debido a la falta de consenso casi absoluta existente en esta técnica biométrica, llegándonos incluso a encontrar discrepancias sobre qué métricas usar a la hora de evaluar los sistemas diseñados. Por tanto, el ECG como modalidad biométrica es una técnica novedosa muy prometedora, pero hasta el momento en un estado muy preliminar.
+

@@ -1,0 +1,101 @@
+%--- Definiciones de comandos nuevos -----------------------------------------&
+%
+%--- Definicion de algunas longitudes ----------------------------------------&
+\parskip=3mm %Espacio entre parrafos
+%
+%--- Formato de texto --------------------------------------------------------&
+\newcommand{\txtb}{\textcolor{blue}}
+\newcommand{\txtr}{\textcolor{red}}
+\newcommand{\txtg}{\textcolor{green}}
+\newcommand{\txty}{\textcolor{yellow}}
+\newcommand{\txtw}{\textcolor{white}}
+\newcommand{\emtt}{\tt\em}
+\newcommand{\sfbf}{\sffamily\bfseries}
+\newcommand{\st}{\small}
+\newcommand{\vs}{{\tt{\em vs}}~}
+%-----------------------------------------------------------------------------&
+%
+\newtheorem{obs}{Observación}
+\newtheorem{imp}{Implementación}
+\floatstyle{plaintop}
+\newfloat{schema}{tpb}{los}[chapter]
+\floatname{schema}{Esquema}
+\captionsetup[schema]{style=scriptStyle}
+\floatstyle{boxed}
+\newfloat{cuadro}{tpb}{los}[chapter]
+\floatname{cuadro}{Cuadro}
+\captionsetup[cuadro]{style=scriptStyle}
+%-----------------------------------------------------------------------------&
+\newenvironment{example}[1][Ejemplo]{\begin{trivlist}
+\item[\hskip \labelsep {\sfbf #1}]}
+{\par\raggedleft\rule[0pt]{.5\linewidth}{.5pt}\end{trivlist}}
+%
+%--- Referencias -------------------------------------------------------------&
+\newcommand{\Chp}[1]{{\small\sffamily\bfseries Capítulo \ref{chap:#1}}}
+\newcommand{\Fig}[1]{{\small\sffamily\bfseries Figura \ref{fig:#1}}}
+\newcommand{\Sch}[1]{{\small\sffamily\bfseries Esquema \ref{sch:#1}}}
+\newcommand{\Tab}[1]{{\small\sffamily\bfseries Cuadro \ref{tab:#1}}}
+\newcommand{\Eqr}[1]{{\small\sffamily\bfseries Ecuación \ref{eq:#1}}}
+\newcommand{\Eqn}[1]{{(\small\ref{eq:#1})}}
+\newcommand{\Pag}[1]{{\small\sffamily\bfseries Pág. \pageref{#1}}}
+%-----------------------------------------------------------------------------&
+%
+%--- Instrucciones Matematicas -----------------------------------------------&
+%\DeclareMathAlphabet{\mathts}{OT1}{phv}{bx}{sl}
+%\DeclareMathAlphabet{\mathts}{T1}{cmbr}{sb}{sl}
+\DeclareMathAlphabet{\mathts}{T1}{txss}{bx}{sl}
+\newcommand{\Vector}[1]{{\mbox{\boldmath $#1$}}}
+\newcommand{\dVector}[1]{\dot{{\mbox{\boldmath $#1$}}}}
+\newcommand{\ddVector}[1]{\ddot{{\mbox{\boldmath $#1$}}}}
+\newcommand{\Matrix}[1]{{\mbox{\boldmath $\sf #1$}}}
+\newcommand{\dMatrix}[1]{\dot{\mbox{\boldmath $\sf #1$}}}
+\newcommand{\ddMatrix}[1]{\ddot{\mbox{\boldmath $\sf #1$}}}
+\newcommand{\Tensor}[1]{\mathts{#1}}
+%\newcommand{\dMatrix}[1]{\dot{\mbox{\boldmath $\sf #1$}}}
+%\newcommand{\ddMatrix}[1]{\ddot{\mbox{\boldmath $\sf #1$}}}
+%-----------------------------------------------------------------------------&
+\newcommand{\dPhi}{\dVector{\Phi}}
+\newcommand{\ddPhi}{\ddVector{\Phi}}
+\newcommand{\Phiq}{\Vector{\Phi}_{\bm q}}
+\newcommand{\dPhiq}{\dVector{\Phi}_{\bm q}}
+\newcommand{\eqdef}{\buildrel \rm def \over =}
+\newcommand{\midp}{n+\frac{1}{2}}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\inte}[3]{\int_{#1}{#2}\,{d#3}}
+\newcommand{\suma}[3]{\sum_{#1}^{#2}{#3}}
+\newcommand{\grad}[1]{\nabla #1}%_{\Vector{\scriptstyle q}}
+\newcommand{\DD}{\overline{\nabla}}
+\newcommand{\ftxt}[2]{$\frac{\text{#1}}{\text{#2}}$}
+\newcommand{\vecp}[1]{\vec{\Vector{#1}}}
+%\def\DD{\lower 0pt \hbox{$\, \buildrel \nabla \over {\scriptstyle n+\beta}\,$}}
+\def\lae{\lower 2pt \hbox{$\, \buildrel {\scriptstyle <}\over {\scriptstyle \sim}\,$}}
+\def\lambdaA{\lower 2pt \hbox{$\, \buildrel \star \over \lambda\,$}}
+%% \renewcommand{\contentsname}{Indice}
+%% \renewcommand{\partname}{Parte}
+%% \renewcommand{\chaptername}{Capítulo}
+%% \renewcommand{\appendixname}{Apéndice}
+%% \renewcommand{\bibname}{Bibliografía}
+%% \renewcommand{\figurename}{Figura}
+%% \renewcommand{\listfigurename}{Indice de figuras}
+%% \renewcommand{\tablename}{Tabla}
+%% \renewcommand{\listtablename}{Indice de tablas}
+%-----------------------------------------------------------------------------&
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{proposition}[theorem]{Proposition}
+%\newtheorem{corollary}[theorem]{Corollary}
+%
+%\newenvironment{proof}[1][Proof]{\begin{trivlist}
+%\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+%\newenvironment{definition}[1][Definition]{\begin{trivlist}
+%\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+%\newenvironment{example}[1][Example]{\begin{trivlist}
+%\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+%\newenvironment{remark}[1][Remark]{\begin{trivlist}
+%\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+%
+%\newcommand{\qed}{\nobreak \ifvmode \relax \else
+%      \ifdim\lastskip<1.5em \hskip-\lastskip
+%      \hskip1.5em plus0em minus0.5em \fi \nobreak
+%      \vrule height0.75em width0.5em depth0.25em\fi}
